@@ -1,30 +1,33 @@
 CREATE TABLE Video(
-    usuarioId INT(11),
-    tamanyo FLOAT(11),
-    rutaAWS VARCHAR(500) UNIQUE,
-    id INT(11) PRIMARY KEY,
-    fechaSubida DATETIME
+    usuarioId INT(11) NOT NULL,
+    tamanyo FLOAT(11) NOT NULL,
+    rutaAWS VARCHAR(500) UNIQUE NOT NULL,
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    fechaSubida DateTime DEFAULT NOW(),
+    nombre VARCHAR(100) NOT NULL,
+    descripcion VARCHAR(500),
+    ultimaModificacion DateTime DEFAULT NOW()
 ) ENGINE = INNODB;
 
 CREATE TABLE Voto(
-    usuarioId INT(11),
-    videoId INT(11),
-    valor INT(1),
-    id INT(11) PRIMARY KEY,
+    usuarioId INT(11) NOT NULL,
+    videoId INT(11) NOT NULL,
+    valor INT(1) NOT NULL,
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
     UNIQUE(usuarioId,videoId)
 ) ENGINE = INNODB;
 
 CREATE TABLE Comentario(
-    id INT(11) PRIMARY KEY,
-    usuarioId INT(11),
-    videoId INT(11),
-    contenido VARCHAR(255),
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    usuarioId INT(11) NOT NULL,
+    videoId INT(11) NOT NULL,
+    contenido VARCHAR(255) NOT NULL,
     comentarioPadreId INT(11),
     FOREIGN KEY(comentarioPadreId) REFERENCES Comentario(id)
 ) ENGINE = INNODB;
 
 CREATE TABLE Usuario (
-  id INT(11) NOT NULL,
+  id INT(11) NOT NULL AUTO_INCREMENT,
   nombreCompleto varchar(100) NOT NULL,
   email varchar(100) NOT NULL,
   nombreUsuario varchar(30) NOT NULL,
