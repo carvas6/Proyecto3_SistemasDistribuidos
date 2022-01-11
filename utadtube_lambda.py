@@ -4,6 +4,8 @@ import pymysql
 import json
 import os, base64, datetime, hashlib, hmac
 
+urlbase = "http://localhost/"
+
 # Variables de sql
 rds_host = "44.200.72.15"
 
@@ -52,7 +54,7 @@ def login(user,password):
     body = {}
     try:
         with conn.cursor() as cur:
-            ok = cur.execute("select id,nombreUsuario from Usuario where email="+user+" and contrasenya="+password)
+            ok = cur.execute("select id,nombreUsuario from Usuario where (email="+user+" or nombreUsuario="+user+") and contrasenya="+password)
             conn.commit()
             if ok > 0:
                 id = cur.fetchone()[0]
@@ -68,15 +70,51 @@ def login(user,password):
                         "fechaSubida": video[3],
                         "ultimaModificacion": video[4]
                         })
-            #for row in cur:
-            #    print(row[0])
-            body["redirectPage"] = 
+                body["redirectPage"] = urlbase+"principal.html"
+            else:
+                body["redirectPage"] = urlbase+"fallo_login.html"
+            
     except pymysql.MySQLError as e:    
         print (e)
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
-        'body' : json.dumps( { 'res': str(result), 'redirect': redirectPage} )
+        'body' : json.dumps(body)
+    }
+
+def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion):
+    conn = connect()
+    body = {"redirectPage": urlbase+"login.html"}
+    try:
+        with conn.cursor() as cur:
+            ok = cur.execute("select id,nombreUsuario from Usuario where nombreUsuario="+nombreUsuario)
+            conn.commit()
+            if ok > 0:
+                body["nombreUsuario"] = False
+            else:
+                body["nombreUsuario"] = True
+            
+            
+            if cur.execute("select id,nombreUsuario from Usuario where email="+email) > 0:
+                ok+=1
+                body["email"] = False
+            else:
+                body["email"] = True
+            conn.commit()
+            if ok == 0:
+                cur.execute("insert into Usuario(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion) values("+nombreUsuario+","+email+","+contrasenya+","+fraseRecuperacion+")")
+                conn.commit()
+                
+                body["redirectPage"] = urlbase+"principal.html"
+            else:
+                body["redirectPage"] = urlbase+"fallo_login.html"
+            
+    except pymysql.MySQLError as e:    
+        print (e)
+    return {
+        'statusCode': 200,
+        'headers': { 'Access-Control-Allow-Origin' : '*' },
+        'body' : json.dumps(body)
     }
 
 def sign(key, msg):
@@ -97,16 +135,9 @@ def lambda_handler(event , context):
         user=float(event["queryStringParameters"]["user"])
         password=float(event["queryStringParameters"]["pass"])
         return login()
-    else if (op == "upload"):
-
-    else if 
-
-    redirectPage="";    
-    print(op1);
-    print(op2);
-    print(op);
-    
-  
-    
-    
+    if op == "registarse":
+        return registrarse()
+    if op == "subir":
+        return {}
+    return {}
 #      
