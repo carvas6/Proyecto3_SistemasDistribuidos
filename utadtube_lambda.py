@@ -105,9 +105,9 @@ def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion
                 cur.execute("insert into Usuario(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion) values("+nombreUsuario+","+email+","+contrasenya+","+fraseRecuperacion+")")
                 conn.commit()
                 
-                body["redirectPage"] = urlbase+"principal.html"
+                body["redirectPage"] = urlbase+"login.html"
             else:
-                body["redirectPage"] = urlbase+"fallo_login.html"
+                body["redirectPage"] = urlbase+"fallo_registro.html"
             
     except pymysql.MySQLError as e:    
         print (e)
