@@ -47,7 +47,7 @@
                                            type="password"
                                            class="input"
                                            placeholder="Repetir contraseña"/>
-                                </span>
+                                    <span><!--Mensaje de error contraseñas no coinciden--></span>
                                 </div>
                             </div>
 							
@@ -58,7 +58,6 @@
                                            type="text"
                                            class="input"
                                            placeholder="Frase de Recuperación de Contraseña"/>
-                                </span>
                                 </div>
                             </div>
                         </div>
@@ -73,10 +72,6 @@
                                 <input type="text"
                                        class="input"
                                        placeholder="Juan Perez"/>
-                                <span class="help is-danger"
-                                      th:if="${#fields.hasErrors('name')}"
-                                      th:errors="*{name}">
-                                </span>
                             </div>
                         </div>
 
