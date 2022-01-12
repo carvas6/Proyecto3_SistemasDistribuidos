@@ -148,6 +148,25 @@ def nuevoVideo(usuarioId,tamanyo,nombre,descripcion):
             conn.commit()
             if (ok == 1):
                 body["id"] = cur.fetchone()[0]
+            body["redirectPage"] = urlbase+"video.html"
+    except pymysql.MySQLError as e:    
+        print (e)
+        body["redirectPage"] = urlbase+"error.html"
+    return {
+        'statusCode': 200,
+        'headers': { 'Access-Control-Allow-Origin' : '*' },
+        'body' : json.dumps(body)
+    }
+
+def editarVideo(id,nombre,descripcion):
+    conn = connect()
+    body = {}
+    try:
+        with conn.cursor() as cur:
+            ok = cur.execute("update Video set nombre="+nombre+", descripcion="+descripcion+" where id="+id)
+            conn.commit()
+            if (ok == 1):
+                body["redirectPage"] = urlbase+"video.html"
     except pymysql.MySQLError as e:    
         print (e)
         body["redirectPage"] = urlbase+"error.html"
