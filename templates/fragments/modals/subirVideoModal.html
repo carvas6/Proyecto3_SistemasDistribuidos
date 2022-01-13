@@ -1,7 +1,54 @@
-<div class="modal">
+<div class="modal" id="modalUploadVideo">
   <div class="modal-background"></div>
-  <div class="modal-content">
-    <!-- Any other Bulma elements you want -->
+  <div class="modal-card">
+    <section class="modal-card-body hero is-primary">
+      <h1 class="title is-primary has-text-centered mt-6">Subir Video</h1>
+      <div class="hero-body">
+          <div class="container">
+              <div class="columns is-centered">
+                  <div class="column">
+                      <form method="POST" action="#" class="form">
+                              <div class="box has-background-light">
+                                  <div class="field">
+                                      <label class="label" for="videoArchive">Video</label>
+                                      <div class="control">
+                                          <input id="videoArchive"
+                                              type="file"
+                                              class="input"
+                                              placeholder="Sube aqui tu archivo de video" required/>
+                                      </div>
+                                  </div>
+
+                                  <div class="field">
+                                      <label class="label" for="videoArchive">Nombre Video</label>
+                                      <div class="control">
+                                          <input id="videoArchive"
+                                              type="text"
+                                              class="input"
+                                              placeholder="Nombre Video"/>
+                                          <span><!--Mensaje de error contraseñas no coinciden--></span>
+                                      </div>
+                                  </div>
+                                  
+                                  <div class="field">
+                                      <label class="label" for="tag">Tags</label>
+                                      <div class="control">
+                                          <input id="tag"
+                                              type="text"
+                                              class="input"
+                                              placeholder="Introduce tag"/>
+                                      </div>
+                                  </div>
+                              </div>
+
+                          <button class="button is-link" type="submit">Cambiar Contraseña
+                          </button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
   </div>
-  <button class="modal-close is-large" aria-label="close"></button>
+  <button class="modal-close is-large" aria-label="close" onclick="$('#modalForgotPassword').removeClass('is-active')"></button>
 </div>
