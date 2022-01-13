@@ -1,7 +1,48 @@
-<div class="modal">
+<div class="modal" id="modalLogin">
   <div class="modal-background"></div>
-  <div class="modal-content">
-    <!-- Any other Bulma elements you want -->
+  <div class="modal-card">
+    <section class="modal-card-body hero is-primary">
+      <h1 class="title is-primary has-text-centered mt-6">Login</h1>
+      <div class="hero-body">
+        <div class="container">
+          <div class="columns is-centered">
+            <div class="column">
+              <form method="POST" action="#" class="box">
+                <div class="field">
+                  <label for="username" class="label">Nombre de usuario</label>
+                  <span><!--Mensaje de error usuario no existe--></span>
+                  <div class="control has-icons-left">
+                    <input id="username" name="username" type="text" class="input" placeholder="Username"
+                                        autofocus="true" required/>
+                    <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="password" class="label">Contraseña</label>
+                  <div class="control has-icons-left">
+                    <input id="password" name="password" type="password" class="input"
+                                        placeholder="*********" required/>
+                    <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
+                    <span><!--Mensaje de error contraseña incorrecta--></span>
+                  </div>
+                </div>
+                <div class="field">
+                  <button class="button is-success" type="submit">Ingresar</button>
+                </div>
+                <div class="field">
+                  <a href="#">Olvidé la contraseña</a>
+                </div>
+                <div class="field">
+                  <a onclick="$('#modalRegister').addClass('is-active');$('#modalLogin').removeClass('is-active')">
+                    Registrarse
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
-  <button class="modal-close is-large" aria-label="close"></button>
+  <button class="modal-close is-large" aria-label="close" onclick="$('#modalLogin').removeClass('is-active')"></button>
 </div>

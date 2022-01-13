@@ -1,0 +1,92 @@
+<style>
+    /*This will guarantee we only show this on mobile only*/
+    @media only screen and (max-width: 600px) {
+        .navbar-mobile-item-hide {
+            display: none;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .right-align-desktop {
+            text-align: right;
+        }
+    }
+</style>
+            <div class="container">
+
+                <div class="navbar-brand">
+                    <a class="navbar-item navbar-home" href="inicio.html">
+                        <img th:src="./static/images/logo.png" alt="UtadTube logo"/>
+                    </a>
+                    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                    data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+
+                <div id="navbarBasicExample" class="navbar-menu">
+                    <div class="navbar-start">
+                        <div class="navbar-item">
+                            <div class="field is-grouped">
+                              <div class="control has-icons-right">
+                                <input type="text" class="input" style="width: 20rem;" placeholder="Busca el video por nombre o tag ...">
+                                <span class="icon is-right">
+                                <i class="fa fa-search"></i>
+                              </span>
+                              </div>
+                              <div class="control">
+                                <input type="submit" class="button is-info" value="Buscar">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="navbar-item">
+                            <a class="navbar-item navbar-averias has-text-weight-semibold" href="https://wiflymobility.com/#como-funciona">¿Cómo funciona?</a>
+                        </div>
+                        <div class="navbar-item">
+                            <a class="navbar-item navbar-averias has-text-weight-semibold" href="https://wiflymobility.com/faq">FAQS</a>
+                        </div>
+                    </div>
+
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <button class="button is-primary is-rounded has-text-weight-semibold" onclick="$('#modalLogin').addClass('is-active')">
+                                ENTRAR
+                            </button>
+                        </div>
+                        <div class="navbar-item has-dropdown is-hoverable" >
+
+                            <a class="navbar-link">
+                                <span class="fa fa-user"></span>
+                                &nbsp
+                                <span>username</span>
+                            </a>
+
+                            <div class="navbar-dropdown is-right" >
+                                <a class="navbar-item" href="perfil.html">
+                                    Mi Perfil
+                                </a>
+                                <a class="navbar-item" href="">
+                                    Cambiar Contraseña
+                                </a>
+                                <a class="navbar-item" href="">
+                                    Acerca de
+                                </a>
+                                <a class="navbar-item" href="">
+                                    Contacto
+                                </a>
+                                <hr class="navbar-divider">
+                                <div class="navbar-item">
+                                    <a class="button" href="/logout" onclick="$('#form').submit();"> Logout</a>
+                                    <form style="visibility: hidden" id="form" method="post"
+                                        action="#"></form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                
+              </script>

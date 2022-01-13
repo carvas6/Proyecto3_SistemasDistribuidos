@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <div class="head"></div>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <title>UtadTube Inicio</title>
+    </head>
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+        </nav>
+        
+        <section></section>
+
+        <div class="modalLogin"></div>
+        <div class="modalRegister"></div>
+
+        <script>
+            $(document).ready(function () {
+              $('.head').load('fragments/header.html');
+              $('.navbar').load('fragments/navbar.html');
+              $('.modalLogin').load('fragments/loginModal.html');
+              $('.modalRegister').load('fragments/registerModal.html');
+              });
+        </script>
+    </body>
+</html>
