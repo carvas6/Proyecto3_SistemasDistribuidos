@@ -1,3 +1,4 @@
+# coding: latin-1
 import sys
 import logging
 import pymysql
@@ -7,12 +8,12 @@ import os, base64, datetime, hashlib, hmac
 urlbase = "http://localhost/"
 
 # Variables de sql
-rds_host = "44.200.72.15"
+rds_host = "127.0.0.1"
 
-username = "admin"
-password ="password"
+username = "root"
+password = ""
 
-dbname = "utadtubedb"
+dbname = "macatubedb"
 
 # Variables de S3
 access_key = ''
@@ -43,40 +44,63 @@ policy = """{"expiration": "2020-12-30T12:00:00.000Z",
 
 def connect():
     try:
-        return pymysql.connect(rds_host, user=username, passwd=password, db=dbname, connect_timeout=10, port=3306)
+        return pymysql.connect(host=rds_host, user=username, password=password, database=dbname, connect_timeout=10, port=3306)
     except pymysql.MySQLError as e:
         print (e)
         sys.exit()
 
+# FUNCIONES DE INICIO
+
+def inicio():
+    conn = connect()
+    body = {}
+    try:
+        with conn.cursor() as cur:
+            
+            cur.execute("select v.id,u.id,v.nombre,u.nombreUsuario,fechaSubida from Video v join Usuario u on v.usuarioId = u.id order by fechaSubida desc limit 30")
+            conn.commit()
+            body["videos"] = []
+            for video in cur.fetchall():
+                body["videos"].append({
+                    "id": video[0],
+                    "usuarioId": video[1],
+                    "nombre": video[2],
+                    "nombreUsuario": video[3],
+                    "fechaSubida": video[4].strftime("%m/%d/%Y, %H:%M:%S")
+                    })            
+    except pymysql.MySQLError as e:    
+        print (e)
+        body["redirectPage"] = urlbase+"error.html"
+    return {
+        'statusCode': 200,
+        'headers': { 'Access-Control-Allow-Origin' : '*' },
+        'body' : json.dumps(body)
+    }
 
 def login(user,password):
     conn = connect()
     body = {}
     try:
         with conn.cursor() as cur:
-            ok = cur.execute("select id,nombreUsuario from Usuario where (email="+user+" or nombreUsuario="+user+") and contrasenya="+password)
+            ok = cur.execute("select id,nombreUsuario from Usuario where (email='"+user+"' or nombreUsuario='"+user+"') and contrasenya='"+password+"'")
             conn.commit()
             if ok > 0:
-                id = cur.fetchone()[0]
                 body["id"] = cur.fetchone()[0]
                 body["nombreUsuario"] = cur.fetchone()[1]
-                cur.execute("select nombre,descripcion,rutaAWS,fechaSubida,ultimaModificacion from Video where usuarioId="+id+" order by fechaSubida")
+                """cur.execute("select nombre,descripcion,rutaAWS,fechaSubida,ultimaModificacion from Video where usuarioId="+body["id"]+" order by fechaSubida")"""
                 conn.commit()
-                body["videos"] = ()
-                for video in cur.fetchall():
+                """for video in cur.fetchall():
                     body["videos"].append({
                         "nombre": video[0],
                         "descripcion": video[1],
                         "rutaAWS": video[2],
                         "fechaSubida": video[3],
                         "ultimaModificacion": video[4]
-                        })
-                body["redirectPage"] = urlbase+"principal.html"
-            else:
-                body["redirectPage"] = urlbase+"fallo_login.html"
+                        })"""
+                body["redirectPage"] = urlbase+"misvideos.html"
             
     except pymysql.MySQLError as e:    
-        print (e)
+        print(e)
         body["redirectPage"] = urlbase+"error.html"
     return {
         'statusCode': 200,
@@ -89,27 +113,31 @@ def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion
     body = {}
     try:
         with conn.cursor() as cur:
-            ok = cur.execute("select id,nombreUsuario from Usuario where nombreUsuario="+nombreUsuario)
+            print("select 1 from Usuario where nombreUsuario='"+nombreUsuario+"'")
+            ok = cur.execute("select 1 from Usuario where nombreUsuario='"+nombreUsuario+"'")
+            print(ok)
             conn.commit()
             if ok > 0:
                 body["nombreUsuario"] = False
             else:
                 body["nombreUsuario"] = True
             
-            
-            if cur.execute("select id,nombreUsuario from Usuario where email="+email) > 0:
+            print("select 1 from Usuario where email='"+email+"'")
+            if cur.execute("select 1 from Usuario where email='"+email+"'") > 0:
                 ok+=1
+                print(ok)
                 body["email"] = False
             else:
                 body["email"] = True
             conn.commit()
             if ok == 0:
-                cur.execute("insert into Usuario(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion) values("+nombreUsuario+","+email+","+contrasenya+","+fraseRecuperacion+")")
+                print("insert into Usuario(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion) values('"+nombreUsuario+"','"+nombreCompleto+"','"+email+"','"+contrasenya+"','"+fraseRecuperacion+"')")
+                cur.execute("insert into Usuario(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion) values('"+nombreUsuario+"','"+nombreCompleto+"','"+email+"','"+contrasenya+"','"+fraseRecuperacion+"')")
                 conn.commit()
-                
-                body["redirectPage"] = urlbase+"login.html"
-            else:
-                body["redirectPage"] = urlbase+"fallo_registro.html"
+                cur.execute("select id from Usuario where nombreUsuario='"+nombreUsuario+"'")
+                conn.commit()
+                body["id"] = cur.fetchone()[0]
+                body["redirectPage"] = urlbase+"misvideos.html"
             
     except pymysql.MySQLError as e:    
         print (e)
@@ -142,7 +170,7 @@ def nuevoVideo(usuarioId,tamanyo,nombre,descripcion):
     body = {}
     try:
         with conn.cursor() as cur:
-            cur.execute("insert into Video(usuarioId,tamanyo,nombre,descripcion) values("+usuarioId+","+tamanyo+","+nombre+","+descripcion+")")
+            cur.execute("insert into Video(usuarioId,tamanyo,nombre,descripcion) values("+usuarioId+","+tamanyo+",'"+nombre+"','"+descripcion+"')")
             conn.commit()
             ok = cur.execute("select id from Video order by id desc limit 1")
             conn.commit()
@@ -163,7 +191,7 @@ def editarVideo(id,nombre,descripcion):
     body = {}
     try:
         with conn.cursor() as cur:
-            ok = cur.execute("update Video set nombre="+nombre+", descripcion="+descripcion+" where id="+id)
+            ok = cur.execute("update Video set nombre='"+nombre+"', descripcion='"+descripcion+"' where id="+id)
             conn.commit()
             if (ok == 1):
                 body["redirectPage"] = urlbase+"video.html"
@@ -182,9 +210,9 @@ def comentar(usuarioId,videoId,contenido,comentarioPadreId):
     try:
         with conn.cursor() as cur:
             if comentarioPadreId != -1:
-                cur.execute("insert into Comentario(usuarioId,videoId,contenido,comentarioPadreId) values("+usuarioId+","+videoId+","+contenido+","+comentarioPadreId+")")
+                cur.execute("insert into Comentario(usuarioId,videoId,contenido,comentarioPadreId) values("+usuarioId+","+videoId+",'"+contenido+"',"+comentarioPadreId+")")
             else:
-                cur.execute("insert into Comentario(usuarioId,videoId,contenido) values("+usuarioId+","+videoId+","+contenido+")")
+                cur.execute("insert into Comentario(usuarioId,videoId,contenido) values("+usuarioId+","+videoId+",'"+contenido+"')")
             conn.commit()
             ok = cur.execute("select id from Comentario order by id desc limit 1")
             conn.commit()
@@ -244,3 +272,7 @@ def lambda_handler(event , context):
         'body' : json.dumps({ "redirectPage": urlbase+"error.html" })
     }
 #      
+#response = inicio()
+#print(response)
+#print(response)
+#response = registrarse("Macascript","jotaele.arrojo@gmail.com","Jose Luis Arrojo Abela","1234","¿Cual es tu color favorito?")
