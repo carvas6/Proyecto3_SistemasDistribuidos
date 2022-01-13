@@ -9,7 +9,7 @@
         <nav class="navbar" role="navigation" aria-label="main navigation">
         </nav>
         
-        <section></section>
+        <section id="listaVideos"></section>
 
         <div class="modalLogin"></div>
         <div class="modalRegister"></div>
@@ -18,9 +18,9 @@
             $(document).ready(function () {
               $('.head').load('fragments/header.html');
               $('.navbar').load('fragments/navbar.html');
-              $('.modalLogin').load('fragments/loginModal.html');
-              $('.modalRegister').load('fragments/registerModal.html');
-              });
+              $('.modalLogin').load('fragments/modals/loginModal.html');
+              $('.modalRegister').load('fragments/modals/registerModal.html');
+            });
         </script>
     </body>
 </html>
