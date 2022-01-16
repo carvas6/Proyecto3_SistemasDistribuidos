@@ -62,7 +62,7 @@ def tagsDeVideo(conn,videoId):
         print (e)
     return tags
 
-# FUNCIONES DE INICIO
+# FUNCIONES DE inicio.html
 
 def inicio():
     conn = connect()
@@ -155,17 +155,18 @@ def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion
 def buscarVideos(busqueda,tags,limit):
     conn = connect()
     body = {}
+    tagsOpcionales = busqueda.split()
     try:
         with conn.cursor() as cur:
             if len(tags) > 0:
                 cur.execute("select v.id,u.id,v.nombre,u.nombreUsuario,v.fechaSubida "+
                             "from Video v join Usuario u on v.usuarioId = u.id join Video_Tags t on v.id = t.videoId "+
-                            "where v.nombre like '%"+busqueda+"%' and t.tag in ("+str(tags)[1:-1]+") "+
+                            "where (v.nombre like '%"+busqueda+"%' or t.tag in ("+str(tagsOpcionales)[1:-1]+")) and t.tag in ("+str(tags)[1:-1]+") "+
                             "order by v.fechaSubida desc limit "+limit)
             else:
                 cur.execute("select v.id,u.id,v.nombre,u.nombreUsuario,v.fechaSubida "+
                             "from Video v join Usuario u on v.usuarioId = u.id "+
-                            "where v.nombre like '%"+busqueda+"%' " +
+                            "where v.nombre like '%"+busqueda+"%' or t.tag in ("+str(tagsOpcionales)[1:-1]+") " +
                             "order by v.fechaSubida desc limit "+limit)
             conn.commit()
             for video in cur.fetchall():
@@ -186,8 +187,9 @@ def buscarVideos(busqueda,tags,limit):
         'headers': { 'Access-Control-Allow-Origin' : '*' },
         'body' : json.dumps(body)
     }
+#-------------------------------
 
-# FUNCIONES DE MISVIDEOS
+# FUNCIONES DE misvideos.html
 
 def misVideos(usuarioId):
     conn = connect()
@@ -298,7 +300,7 @@ def comentar(usuarioId,videoId,contenido,comentarioPadreId):
 def sign(key, msg):
     return hmac.new(key, msg.encode('utf-8'), hashlib.sha256).digest()
 
-def getSignatureKey(key, dateStamp, regionName, serviceName):
+def getSignatureKey(key, dateStamp, regionName, serv'%"+busqueda+"%'iceName):
     kDate = sign(('AWS4' + key).encode('utf-8'), dateStamp)
     kRegion = sign(kDate, regionName)
     kService = sign(kRegion, serviceName)
@@ -319,7 +321,7 @@ def lambda_handler(event , context):
         nombreUsuario = event["queryStringParameters"]["nombreUsuario"]
         email = event["queryStringParameters"]["email"]
         nombreCompleto = event["queryStringParameters"]["nombreCompleto"]
-        contrasenya = event["queryStringParameters"]["contrasenya"]
+        contrasenya = event["queryStringParameters"]'%"+busqueda+"%'"contrasenya"]
         fraseRecuperacion = event["queryStringParameters"]["fraseRecuperacion"]
         return registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion)
     if op == "buscarVideos":
@@ -344,7 +346,7 @@ def lambda_handler(event , context):
         contenido = event["queryStringParameters"]["contenido"]
         comentarioPadreId = event["queryStringParameters"]["comentarioPadreId"]
         return comentar(usuarioId,videoId,contenido,comentarioPadreId)
-    return {
+    return {'%"+busqueda+"%'
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
         'body' : json.dumps({ "redirectPage": urlbase+"error.html" })
@@ -354,3 +356,4 @@ def lambda_handler(event , context):
 #print(response)
 #print(response)
 #response = registrarse("Macascript","jotaele.arrojo@gmail.com","Jose Luis Arrojo Abela","1234","¿Cual es tu color favorito?")
+buscarVideos("",["patata"],30)
