@@ -10,7 +10,7 @@ urlbase = "http://localhost/"
 # Variables de sql
 rds_host = "127.0.0.1"
 
-username = "root"
+username = "user"
 password = ""
 
 dbname = "macatubedb"
@@ -53,8 +53,7 @@ def tagsDeVideo(conn,videoId):
     tags = []
     try:
         with conn.cursor() as cur:
-
-            cur.execute("select tag from Video_Tags where videoId = "+videoId)
+            cur.execute("select tag from Video_Tags where videoId = "+str(videoId))
             conn.commit()
             for tag in cur.fetchall():
                 tags.append(tag[0])
@@ -70,7 +69,9 @@ def inicio():
     try:
         with conn.cursor() as cur:
 
-            cur.execute("select v.id,u.id,v.nombre,u.nombreUsuario,fechaSubida from Video v join Usuario u on v.usuarioId = u.id order by fechaSubida desc limit 30")
+            cur.execute("select v.id,u.id,v.nombre,u.nombreUsuario,fechaSubida "+
+                        "from Video v join Usuario u on v.usuarioId = u.id "+
+                        "order by fechaSubida desc limit 30")
             conn.commit()
             body["videos"] = []
             for video in cur.fetchall():
@@ -101,13 +102,13 @@ def login(user,password):
     body = {}
     try:
         with conn.cursor() as cur:
-            ok = cur.execute("select id,nombreUsuario from Usuario where (email='"+user+"' or nombreUsuario='"+user+"') and contrasenya='"+password+"'")
+            cur.execute("select id,nombreUsuario from Usuario where (email='"+user+"' or nombreUsuario='"+user+"') and contrasenya='"+password+"'")
             conn.commit()
-            if ok > 0:
-                body["id"] = cur.fetchone()[0]
-                body["nombreUsuario"] = cur.fetchone()[1]
+            row = cur.fetchone()
+            if row is not None:
+                body["id"] = row[0]
+                body["nombreUsuario"] = row[1]
                 body["redirectPage"] = urlbase+"misvideos.html"
-
     except pymysql.MySQLError as e:
         print(e)
         body["redirectPage"] = urlbase+"error.html"
@@ -127,25 +128,22 @@ def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion
     body = {}
     try:
         with conn.cursor() as cur:
-            print("select 1 from Usuario where nombreUsuario='"+nombreUsuario+"'")
-            ok = cur.execute("select 1 from Usuario where nombreUsuario='"+nombreUsuario+"'")
-            print(ok)
+            cur.execute("select 1 from Usuario where nombreUsuario='"+nombreUsuario+"'")
             conn.commit()
-            if ok > 0:
+            ok = 0
+            if cur.fetchone is None:
+                ok += 1
                 body["nombreUsuario"] = False
             else:
                 body["nombreUsuario"] = True
-
-            print("select 1 from Usuario where email='"+email+"'")
-            if cur.execute("select 1 from Usuario where email='"+email+"'") > 0:
-                ok+=1
-                print(ok)
+            cur.execute("select 1 from Usuario where email='"+email+"'")
+            if cur.fetchone() is None:
+                ok += 1
                 body["email"] = False
             else:
                 body["email"] = True
             conn.commit()
             if ok == 0:
-                print("insert into Usuario(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion) values('"+nombreUsuario+"','"+nombreCompleto+"','"+email+"','"+contrasenya+"','"+fraseRecuperacion+"')")
                 cur.execute("insert into Usuario(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion) values('"+nombreUsuario+"','"+nombreCompleto+"','"+email+"','"+contrasenya+"','"+fraseRecuperacion+"')")
                 conn.commit()
                 cur.execute("select id from Usuario where nombreUsuario='"+nombreUsuario+"'")
@@ -171,26 +169,35 @@ def buscarVideos(busqueda,tags,limit):
     conn = connect()
     body = {}
     tagsOpcionales = busqueda.split()
+    if busqueda != "":
+        condicionBusqueda = "v.nombre like '%"+busqueda+"%'"
+        condicionTagsOpcionales = "t.tag in ("+str(tagsOpcionales)[1:-1]+")"
+    else:
+        condicionBusqueda = "true"
+        condicionTagsOpcionales = "false"
+
     try:
         with conn.cursor() as cur:
             if len(tags) > 0:
-                cur.execute("select v.id,u.id,v.nombre,u.nombreUsuario,v.fechaSubida "+
+                cur.execute("select distinct v.id,u.id,v.nombre,u.nombreUsuario,v.fechaSubida "+
                             "from Video v join Usuario u on v.usuarioId = u.id join Video_Tags t on v.id = t.videoId "+
-                            "where (v.nombre like '%"+busqueda+"%' or t.tag in ("+str(tagsOpcionales)[1:-1]+")) and t.tag in ("+str(tags)[1:-1]+") "+
-                            "order by v.fechaSubida desc limit "+limit)
+                            "where ("+condicionBusqueda+" or "+condicionTagsOpcionales+") and t.tag in ("+str(tags)[1:-1]+") "+
+                            "order by v.fechaSubida desc limit "+str(limit))
             else:
-                cur.execute("select v.id,u.id,v.nombre,u.nombreUsuario,v.fechaSubida "+
-                            "from Video v join Usuario u on v.usuarioId = u.id "+
-                            "where v.nombre like '%"+busqueda+"%' or t.tag in ("+str(tagsOpcionales)[1:-1]+") " +
-                            "order by v.fechaSubida desc limit "+limit)
+                cur.execute("select distinct v.id,u.id,v.nombre,u.nombreUsuario,v.fechaSubida "+
+                            "from Video v join Usuario u on v.usuarioId = u.id join Video_Tags t on v.id = t.videoId "+
+                            "where "+condicionBusqueda+" or "+condicionTagsOpcionales+" " +
+                            "order by v.fechaSubida desc limit "+str(limit))
             conn.commit()
+            body["videos"] = []
             for video in cur.fetchall():
+                print(video)
                 body["videos"].append({
                     "id": video[0],
                     "usuarioId": video[1],
                     "nombre": video[2],
                     "nombreUsuario": video[3],
-                    "fechaSubida": video[4],
+                    "fechaSubida": video[4].strftime("%m/%d/%Y, %H:%M:%S"),
                     "tags": tagsDeVideo(conn,video[0])
                     })
 
@@ -265,10 +272,11 @@ def nuevoVideo(usuarioId,tamanyo,rutaAWS,nombre,descripcion,tags):
         with conn.cursor() as cur:
             cur.execute("insert into Video(usuarioId,tamanyo,rutaAWS,nombre,descripcion) values("+usuarioId+","+tamanyo+",'"+rutaAWS+",'"+nombre+"','"+descripcion+"')")
             conn.commit()
-            ok = cur.execute("select id from Video order by id desc limit 1")
+            cur.execute("select id from Video order by id desc limit 1")
             conn.commit()
-            if (ok == 1):
-                body["id"] = cur.fetchone()[0]
+            row = cur.fetchone()
+            if (row is not None):
+                body["id"] = row[0]
                 for tag in tags:
                     cur.execute("insert into Video_Tags values("+body["id"]+","+tag+")")
             body["redirectPage"] = urlbase+"video.html"
@@ -298,15 +306,16 @@ def video(id):
                         "from Video v join Usuario u on u.id = v.usuarioId "+
                         "where v.id = "+id)
             conn.commit()
+            row = cur.fetchone()
             body["video"] = {
-                "usuarioId": cur.fetchone()[0],
-                "nombreVideo": cur.fetchone()[1],
-                "nombreUsuario": cur.fetchone()[2],
-                "descripcion": cur.fetchone()[3],
-                "tamanyo": cur.fetchone()[4],
-                "rutaAWS": cur.fetchone()[5],
-                "fechaSubida": cur.fetchone()[6],
-                "ultimaModificacion": cur.fetchone()[7],
+                "usuarioId": row[0],
+                "nombreVideo": row[1],
+                "nombreUsuario": row[2],
+                "descripcion": row[3],
+                "tamanyo": row[4],
+                "rutaAWS": row[5],
+                "fechaSubida": row[6],
+                "ultimaModificacion": row[7],
                 "tags": tagsDeVideo(conn,id)
             }
     except pymysql.MySQLError as e:
@@ -328,9 +337,9 @@ def editarVideo(id,nombre,descripcion):
     body = {}
     try:
         with conn.cursor() as cur:
-            ok = cur.execute("update Video set nombre='"+nombre+"', descripcion='"+descripcion+"' where id="+id)
+            cur.execute("update Video set nombre='"+nombre+"', descripcion='"+descripcion+"' where id="+id)
             conn.commit()
-            if (ok == 1):
+            if (cur.fetchone() == 1):
                 body["redirectPage"] = urlbase+"video.html"
     except pymysql.MySQLError as e:
         print(e)
@@ -356,10 +365,11 @@ def comentar(usuarioId,videoId,contenido,comentarioPadreId):
             else:
                 cur.execute("insert into Comentario(usuarioId,videoId,contenido) values("+usuarioId+","+videoId+",'"+contenido+"')")
             conn.commit()
-            ok = cur.execute("select id from Comentario order by id desc limit 1")
+            cur.execute("select id from Comentario order by id desc limit 1")
             conn.commit()
-            if (ok == 1):
-                body["id"] = cur.fetchone()[0]
+            row = cur.fetchone()
+            if (row is not None):
+                body["id"] = row[0]
     except pymysql.MySQLError as e:
         print(e)
         body["redirectPage"] = urlbase+"error.html"
@@ -377,7 +387,7 @@ def comentar(usuarioId,videoId,contenido,comentarioPadreId):
 def sign(key, msg):
     return hmac.new(key, msg.encode('utf-8'), hashlib.sha256).digest()
 
-def getSignatureKey(key, dateStamp, regionName, serv'%"+busqueda+"%'iceName):
+def getSignatureKey(key, dateStamp, regionName, serviceName):
     kDate = sign(('AWS4' + key).encode('utf-8'), dateStamp)
     kRegion = sign(kDate, regionName)
     kService = sign(kRegion, serviceName)
@@ -426,14 +436,10 @@ def lambda_handler(event , context):
         contenido = event["queryStringParameters"]["contenido"]
         comentarioPadreId = event["queryStringParameters"]["comentarioPadreId"]
         return comentar(usuarioId,videoId,contenido,comentarioPadreId)
-    return {'%"+busqueda+"%'
+    return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
         'body' : json.dumps({ "redirectPage": urlbase+"error.html" })
     }
 #
-#response = inicio()
-#print(response)
-#print(response)
-#response = registrarse("Macascript","jotaele.arrojo@gmail.com","Jose Luis Arrojo Abela","1234","¿Cual es tu color favorito?")
-buscarVideos("",["patata"],30)
+# PARA PROBARLO EJECUTE ESTA FUNCION EN PYTHON3: exec(open("utadtube_lambda.py").read())
