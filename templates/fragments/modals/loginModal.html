@@ -7,42 +7,119 @@
         <div class="container">
           <div class="columns is-centered">
             <div class="column">
-              <form method="POST" action="#" class="box">
                 <div class="field">
-                  <label for="username" class="label">Nombre de usuario</label>
+                  <label for="usernameLogin" class="label">Nombre de usuario</label>
                   <span><!--Mensaje de error usuario no existe--></span>
                   <div class="control has-icons-left">
-                    <input id="username" name="username" type="text" class="input" placeholder="Username"
-                                        autofocus="true" required/>
-                    <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                    <input
+                      id="usernameLogin"
+                      name="usernameLogin"
+                      type="text"
+                      class="input"
+                      placeholder="Username"
+                      autofocus="true"
+                      required
+                    />
+                    <span class="icon is-small is-left"
+                      ><i class="fa fa-user"></i
+                    ></span>
                   </div>
                 </div>
                 <div class="field">
-                  <label for="password" class="label">Contraseña</label>
+                  <label for="passwordLogin" class="label">Contraseña</label>
                   <div class="control has-icons-left">
-                    <input id="password" name="password" type="password" class="input"
-                                        placeholder="*********" required/>
-                    <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
-                    <span><!--Mensaje de error contraseña incorrecta--></span>
+                    <input
+                      id="passwordLogin"
+                      name="passwordLogin"
+                      type="password"
+                      class="input"
+                      placeholder="*********"
+                      required
+                    />
+                    <span class="icon is-small is-left"
+                      ><i class="fa fa-lock"></i
+                    ></span>
+                    <span id="errorLogin" style="color:red;"><!--Mensaje de error contraseña o usuarioincorrectos--></span>
                   </div>
                 </div>
                 <div class="field">
-                  <button class="button is-success" type="submit">Ingresar</button>
+                  <button class="button is-success" id="loginButton">
+                    Ingresar
+                  </button>
                 </div>
                 <div class="field">
-                  <a onclick="$('#modalForgotPassword').addClass('is-active');$('#modalLogin').removeClass('is-active')">Olvidé la contraseña</a>
+                  <a
+                    onclick="$('#modalForgotPassword').addClass('is-active');$('#modalLogin').removeClass('is-active')"
+                    >Olvidé la contraseña</a
+                  >
                 </div>
                 <div class="field">
-                  <a onclick="$('#modalRegister').addClass('is-active');$('#modalLogin').removeClass('is-active')">
+                  <a
+                    onclick="$('#modalRegister').addClass('is-active');$('#modalLogin').removeClass('is-active')"
+                  >
                     Registrarse
                   </a>
                 </div>
-              </form>
             </div>
           </div>
         </div>
       </div>
     </section>
   </div>
-  <button class="modal-close is-large" aria-label="close" onclick="$('#modalLogin').removeClass('is-active')"></button>
+  <button
+    class="modal-close is-large"
+    aria-label="close"
+    onclick="$('#modalLogin').removeClass('is-active')"
+  ></button>
 </div>
+<script>
+  $(document).ready(function () {
+    $("#loginButton").click(function () {
+      var usuario = document.getElementById("usernameLogin").value;
+      var contrasenya = document.getElementById("passwordLogin").value;
+
+      var vres = "";
+      var asd = $.get(
+        //"http://18.133.181.212/calculadora.php",
+        "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+
+        { op: "login", usuario: usuario, contrasenya: contrasenya},
+        function (data) {
+          function jsonEscape(str) {
+            return str
+              .replace(/\n/g, "\\\\n")
+              .replace(/\r/g, "\\\\r")
+              .replace(/\t/g, "\\\\t");
+          }
+
+          //descomentar esta línea si se usa PHP :
+          //var json=JSON.parse(data);
+          //descomentar esta línea si se usa lambda-apigateway : var json=data;
+          var json = data;
+          alert("page content: " + JSON.stringify(json));
+          document.getElementById("res").innerHTML =
+            "Resultado recibido:" + json.res;
+          window.location.replace(json.redirect);
+        }
+      )
+        .done(function () {
+          if(JSON.stringify(json)==""){
+            document.getElementById('errorLogin').innerText="Usuario o Contraseña no válidos";
+          }
+          else{
+            //loguear al usuario (descargar cookies)
+            $('#modalLogin').removeClass('is-active');
+            window.location = window.location.replace("/inicio.html","/profile.html");
+          }
+          alert("second success");
+        })
+        .fail(function () {
+          alert("error logueando al usuario");
+        });
+
+      asd.always(function () {
+        alert("second finished");
+      });
+    });
+  });
+</script>
