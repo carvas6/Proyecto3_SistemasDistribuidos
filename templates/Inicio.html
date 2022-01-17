@@ -155,8 +155,10 @@
                         var listaVideos = document.getElementById('listaVideos');
                         if(json.videos.length==0){
                             let emptyList = document.createElement('p');
+                            emptyList.classList.add('is-subtitle', 'is-2');
                             emptyList.style="color:red;";
                             emptyList.innerText ="Actualmente no hay ningún video";
+                            listaVideos.classList.add('has-text-centered');
                             listaVideos.innerHTML = emptyList;
                         }
                         else{
