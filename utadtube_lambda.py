@@ -46,7 +46,7 @@ def connect():
     try:
         return pymysql.connect(host=rds_host, user=username, password=password, database=dbname, connect_timeout=10, port=3306)
     except pymysql.MySQLError as e:
-        print (e)
+        print(e)
         sys.exit()
 
 def tagsDeVideo(conn,videoId):
@@ -59,7 +59,7 @@ def tagsDeVideo(conn,videoId):
             for tag in cur.fetchall():
                 tags.append(tag[0])
     except pymysql.MySQLError as e:
-        print (e)
+        print(e)
     return tags
 
 # FUNCIONES DE inicio.html
@@ -80,11 +80,16 @@ def inicio():
                     "nombre": video[2],
                     "nombreUsuario": video[3],
                     "fechaSubida": video[4].strftime("%m/%d/%Y, %H:%M:%S"),
-                    "tags": tagsDeVideo(video[0])
+                    "tags": tagsDeVideo(conn,video[0])
                     })
     except pymysql.MySQLError as e:
-        print (e)
+        print(e)
         body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
@@ -106,6 +111,11 @@ def login(user,password):
     except pymysql.MySQLError as e:
         print(e)
         body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
@@ -144,8 +154,13 @@ def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion
                 body["redirectPage"] = urlbase+"misvideos.html"
 
     except pymysql.MySQLError as e:
-        print (e)
+        print(e)
         body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
@@ -176,12 +191,17 @@ def buscarVideos(busqueda,tags,limit):
                     "nombre": video[2],
                     "nombreUsuario": video[3],
                     "fechaSubida": video[4],
-                    "tags": tagsDeVideo(video[0])
+                    "tags": tagsDeVideo(conn,video[0])
                     })
 
     except pymysql.MySQLError as e:
         print(e)
         body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
@@ -204,12 +224,17 @@ def misVideos(usuarioId):
                         "id": video[0],
                         "nombre": video[0],
                         "fechaSubida": video[3],
-                        "tags": tagsDeVideo(video[0])
+                        "tags": tagsDeVideo(conn,video[0])
                     }
                 )
     except pymysql.MySQLError as e:
         print(e)
         body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
@@ -248,8 +273,50 @@ def nuevoVideo(usuarioId,tamanyo,rutaAWS,nombre,descripcion,tags):
                     cur.execute("insert into Video_Tags values("+body["id"]+","+tag+")")
             body["redirectPage"] = urlbase+"video.html"
     except pymysql.MySQLError as e:
-        print (e)
+        print(e)
         body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
+    return {
+        'statusCode': 200,
+        'headers': { 'Access-Control-Allow-Origin' : '*' },
+        'body' : json.dumps(body)
+    }
+#-------------------------------
+
+# FUNCIONES DE video.html
+
+def video(id):
+    conn = connect()
+    body = {}
+    try:
+        with conn.cursor() as cur:
+            cur.execute("select u.id,v.nombre,u.nombre,v.descripcion,v.tamanyo,v.rutaAWS,v.fechaSubida,v.ultimaModificacion "+
+                        "from Video v join Usuario u on u.id = v.usuarioId "+
+                        "where v.id = "+id)
+            conn.commit()
+            body["video"] = {
+                "usuarioId": cur.fetchone()[0],
+                "nombreVideo": cur.fetchone()[1],
+                "nombreUsuario": cur.fetchone()[2],
+                "descripcion": cur.fetchone()[3],
+                "tamanyo": cur.fetchone()[4],
+                "rutaAWS": cur.fetchone()[5],
+                "fechaSubida": cur.fetchone()[6],
+                "ultimaModificacion": cur.fetchone()[7],
+                "tags": tagsDeVideo(conn,id)
+            }
+    except pymysql.MySQLError as e:
+        print(e)
+        body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
@@ -266,8 +333,13 @@ def editarVideo(id,nombre,descripcion):
             if (ok == 1):
                 body["redirectPage"] = urlbase+"video.html"
     except pymysql.MySQLError as e:
-        print (e)
+        print(e)
         body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
@@ -289,8 +361,13 @@ def comentar(usuarioId,videoId,contenido,comentarioPadreId):
             if (ok == 1):
                 body["id"] = cur.fetchone()[0]
     except pymysql.MySQLError as e:
-        print (e)
+        print(e)
         body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
@@ -321,7 +398,7 @@ def lambda_handler(event , context):
         nombreUsuario = event["queryStringParameters"]["nombreUsuario"]
         email = event["queryStringParameters"]["email"]
         nombreCompleto = event["queryStringParameters"]["nombreCompleto"]
-        contrasenya = event["queryStringParameters"]'%"+busqueda+"%'"contrasenya"]
+        contrasenya = event["queryStringParameters"]["contrasenya"]
         fraseRecuperacion = event["queryStringParameters"]["fraseRecuperacion"]
         return registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion)
     if op == "buscarVideos":
@@ -340,6 +417,9 @@ def lambda_handler(event , context):
         nombre = event["queryStringParameters"]["nombre"]
         descripcion = event["queryStringParameters"]["descripcion"]
         return nuevoVideo(usuarioId,tamanyo,nombre,descripcion)
+    if op == "video":
+        id = event["queryStringParameters"]["id"]
+        return video(id)
     if op == "comentar":
         usuarioId = event["queryStringParameters"]["usuarioId"]
         videoId = event["queryStringParameters"]["videoId"]
