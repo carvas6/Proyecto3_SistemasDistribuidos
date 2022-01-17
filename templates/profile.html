@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <div class="head"></div>
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <title>UtadTube Inicio</title>
     </head>
     <body>
@@ -20,6 +20,44 @@
               $('.head').load('fragments/header.html');
               $('.navbar').load('fragments/navbar.html');
               $('.modalChangePassword').load('fragments/modals/changePasswordModal.html');
+
+              var usuarioId = document.getElementById("usuarioId").value;
+
+                var vres = "";
+                var asd = $.get(
+                    //"http://18.133.181.212/calculadora.php",
+                    "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+
+                    { op: "misvideos", usuarioId: usuarioId},
+                    function (data) {
+                    function jsonEscape(str) {
+                        return str
+                        .replace(/\n/g, "\\\\n")
+                        .replace(/\r/g, "\\\\r")
+                        .replace(/\t/g, "\\\\t");
+                    }
+
+                    //descomentar esta línea si se usa PHP :
+                    //var json=JSON.parse(data);
+                    //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                    var json = data;
+                    alert("page content: " + JSON.stringify(json));
+                    document.getElementById("res").innerHTML =
+                        "Resultado recibido:" + json.res;
+                    window.location.replace(json.redirect);
+                    }
+                )
+                    .done(function () {
+                    //añadir videos
+                    alert("second success");
+                    })
+                    .fail(function () {
+                       aler("error cargando videos");
+                    });
+
+                asd.always(function () {
+                    alert("second finished");
+                });
             });
         </script>
     </body>
