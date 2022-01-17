@@ -103,12 +103,18 @@
         }
       )
         .done(function () {
-          //loguear al usuario (descargar cookies)
-          $('#modalLogin').removeClass('is-active');
+          if(JSON.stringify(json)==""){
+            document.getElementById('errorLogin').innerText="Usuario o Contraseña no válidos";
+          }
+          else{
+            //loguear al usuario (descargar cookies)
+            $('#modalLogin').removeClass('is-active');
+            window.location = window.location.replace("/inicio.html","/profile.html");
+          }
           alert("second success");
         })
         .fail(function () {
-          document.getElementById('errorLogin').innerText="Usuario o Contraseña no válidos";
+          alert("error logueando al usuario");
         });
 
       asd.always(function () {
