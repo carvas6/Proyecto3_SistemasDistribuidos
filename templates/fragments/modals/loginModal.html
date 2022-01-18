@@ -99,7 +99,7 @@
           alert("page content: " + JSON.stringify(json));
           document.getElementById("res").innerHTML =
             "Resultado recibido:" + json.res;
-          window.location.replace(json.redirect);
+          //window.location.replace(json.redirect);
         }
       )
         .done(function () {
@@ -111,7 +111,6 @@
             $('#modalLogin').removeClass('is-active');
             window.location.replace("profile.html");
           }
-          alert("second success");
         })
         .fail(function () {
           alert("error logueando al usuario");

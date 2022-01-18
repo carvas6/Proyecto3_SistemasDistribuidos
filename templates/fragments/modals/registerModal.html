@@ -26,6 +26,9 @@
                           placeholder="Nombre de usuario"
                           required
                         />
+                        <span
+                            id="errorUsernameRegister" style="color:red;"
+                        ><!--Mensaje de error contraseñas muy corta--></span>
                       </div>
                     </div>
 
@@ -43,7 +46,7 @@
                         />
                         <span
                             id="errorPasswordRegister" style="color:red;"
-                        ><!--Mensaje de error contraseñas no coinciden--></span>
+                        ><!--Mensaje de error contraseñas muy corta--></span>
                       </div>
                     </div>
 
@@ -107,6 +110,10 @@
                         class="input"
                         placeholder="tu@email.com"
                       />
+                      <span
+                            id="errorEmailRegister" style="color:red;"
+                        ><!--Mensaje de email ocupado--></span
+                        >
                     </div>
                   </div>
                 </div>
@@ -150,6 +157,9 @@
       if(contrasenya!=passwordConfirm){
         document.getElementById('errorPasswordConfirmRegister').innerText = "Las contraseñas no coinciden";
       }
+      else if(contrasenya.length<8){
+        document.getElementById('errorPasswordRegister').innerText = "La contraseña debe tener al menos 8 carácteres";
+      }
       else{
         var vres = "";
         var asd = $.get(
@@ -172,17 +182,24 @@
             alert("page content: " + JSON.stringify(json));
             document.getElementById("res").innerHTML =
                 "Resultado recibido:" + json.res;
-            window.location.replace(json.redirect);
+            //window.location.replace(json.redirect);
             }
         )
         .done(function () {
-            //loguear al usuario (descargar cookies)
-            $("#modalRegister").removeClass("is-active");
-            alert("second success");
-            })
-            .fail(function () {
+            if(json.nombreUsuario==false){
+                document.getElementById('errorUsernameRegister').innerText="Nombre de usuario ya existe";
+            }
+            else if(json.email==false){
+                document.getElementById('errorEmailRegister').innerText="Email ya está registrado";
+            }
+            else{
+                //loguear al usuario (descargar cookies)
+                $("#modalRegister").removeClass("is-active");
+            }
+        })
+        .fail(function () {
              alert("No ha sido posible registrar al usuario");
-            });
+        });
 
         asd.always(function () {
             alert("second finished");
