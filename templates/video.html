@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <div class="head"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <title>UtadTube Inicio</title>
+    </head>
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+        </nav>
+
+        <div class="columns">
+            <div class="section column is-four-fifths">
+                <video controls class="video" width="100%" src="https://www.youtube.com/681324c4-4a97-4fac-a097-d6a427bde958">
+                </video>
+                <h1 class="title">Titulo de video
+                </h1>
+                <div style="display:flex;justify-content: space-between;">
+                    <p>Fecha de subida</p>
+                    <p>Votos</p>
+                </div>
+                <hr>
+                <a href=""><h2 class="subtitle">Nombre de usuario</h2></a>
+                <hr>
+                <div id="comentariosVideo">
+                    <p>Numero de Comentarios</p>
+                    <br>
+                    <div id="comentario">
+                        <p><b>usuario que publico</b></p>
+                        <p>este es un comentario sobre el video</p>
+                    </div>
+                    <br>
+                    <div id="comentario">
+                        <p><b>usuario que publico</b></p>
+                        <p>este es un comentario sobre el video</p>
+                    </div>
+                    <br>
+                    <div id="comentario">
+                        <p><b>usuario que publico</b></p>
+                        <p>este es un comentario sobre el video</p>
+                    </div>
+                </div>
+            </div>
+            <div class="section column is-one-fifths">
+                <p>Videos relacionados</p>
+            </div>
+        </div>
+
+        <div class="modalLogin"></div>
+        <div class="modalRegister"></div>
+        <div class="modalForgotPassword"></div>
+        <div class="modalChangePassword"></div>
+        
+        <script>
+            $(document).ready(function () {
+              $('.head').load('fragments/header.html');
+              $('.navbar').load('fragments/navbar.html');
+              $('.modalLogin').load('fragments/modals/loginModal.html');
+              $('.modalRegister').load('fragments/modals/registerModal.html');
+              $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
+              $('.modalChangePassword').load('fragments/modals/changePasswordModal.html');
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const idUsuario = urlParams.get('idUsuario');
+        </script>
+    </body>        
+</html>

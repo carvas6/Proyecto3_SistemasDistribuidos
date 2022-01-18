@@ -8,12 +8,16 @@
     <body>
         <nav class="navbar" role="navigation" aria-label="main navigation">
         </nav>
+
+        <input type="hidden" id="idUsuario"><!--idUsuario-->
+        <input type="hidden" id="nombreUsuario"><!--nombreUsuario-->
         
         <div class="section is-clearfix">
 
                 <div class="columns is-multiline" id="listaVideos">
 
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="height:fit-content;">
+                    <!--<div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="height:fit-content;">
+                       <a onclick="verVideo()" style="color:black;">
                         <div class="column is-narrow has-text-centered">
                                 <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
 
@@ -23,91 +27,8 @@
                                     <p>fecha subida</p>
                                 </div>
                         </div>
-                    </div>
-
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="height:fit-content;">
-                        <div class="column is-narrow has-text-centered">
-                                <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
-
-                                <div class="bottom">
-                                    <h1 style="height:50px;overflow:hidden;" class="is-subtitle is-6"><b>Nombre Video muy largo como para que quepa en dos lineas a ver que pasa</b></h1>
-                                    <h2 class="is-subtitle is-6">username</h2>
-                                    <p>fecha subida</p>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="box-shadow:none;height:fit-content;">
-                        <div class="column is-narrow has-text-centered">
-                                <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
-
-                                <div class="bottom">
-                                    <h1 style="height:50px;overflow:hidden;" class="is-subtitle is-6"><b>Nombre Video muy largo como para que quepa en dos lineas a ver que pasa</b></h1>
-                                    <h2 class="is-subtitle is-6">username</h2>
-                                    <p>fecha subida</p>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="box-shadow:none;height:fit-content;">
-                        <div class="column is-narrow has-text-centered">
-                                <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
-
-                                <div class="bottom">
-                                    <h1 style="height:50px;overflow:hidden;" class="is-subtitle is-6"><b>Nombre Video muy largo como para que quepa en dos lineas a ver que pasa</b></h1>
-                                    <h2 class="is-subtitle is-6">username</h2>
-                                    <p>fecha subida</p>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="box-shadow:none;height:fit-content;">
-                        <div class="column is-narrow has-text-centered">
-                                <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
-
-                                <div class="bottom">
-                                    <h1 style="height:50px;overflow:hidden;" class="is-subtitle is-6"><b>Nombre Video muy largo como para que quepa en dos lineas a ver que pasa</b></h1>
-                                    <h2 class="is-subtitle is-6">username</h2>
-                                    <p>fecha subida</p>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="box-shadow:none;height:fit-content;">
-                        <div class="column is-narrow has-text-centered">
-                                <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
-
-                                <div class="bottom">
-                                    <h1 style="height:50px;overflow:hidden;" class="is-subtitle is-6"><b>Nombre Video muy largo como para que quepa en dos lineas a ver que pasa</b></h1>
-                                    <h2 class="is-subtitle is-6">username</h2>
-                                    <p>fecha subida</p>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="box-shadow:none;height:fit-content;">
-                        <div class="column is-narrow has-text-centered">
-                                <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
-
-                                <div class="bottom">
-                                    <h1 style="height:50px;overflow:hidden;" class="is-subtitle is-6"><b>Nombre Video muy largo como para que quepa en dos lineas a ver que pasa</b></h1>
-                                    <h2 class="is-subtitle is-6">username</h2>
-                                    <p>fecha subida</p>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="box-shadow:none;height:fit-content;">
-                        <div class="column is-narrow has-text-centered">
-                                <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
-
-                                <div class="bottom">
-                                    <h1 style="height:50px;overflow:hidden;" class="is-subtitle is-6"><b>Nombre Video muy largo como para que quepa en dos lineas a ver que pasa</b></h1>
-                                    <h2 class="is-subtitle is-6">username</h2>
-                                    <p>fecha subida</p>
-                                </div>
-                        </div>
-                    </div>
+                       </a>
+                    </div>-->
     
                 </div>
         </section>
@@ -166,12 +87,17 @@
                                 let box = document.createElement('div');
                                 box.classList.add('column', 'is-full-mobile', 'is-half-tablet', 'is-one-third-desktop', 'is-one-quarter-widescreen', 'is-one-fifth-fullhd');
                                 
+                                let linkBox = document.createElement('a');
+                                linkBox.style = "color:black;";
+                                linkBox.setAttribute('onclick', "verVideo(" + json.videos[i].id + "," + json.videos[i].usuarioId + "," + json.videos[i].nombreUsuario + ")");
+
                                 let boxColumn = document.createElement('div');
                                 boxColumn.classList.add('column', 'is-narrow', 'has-text-centered');
                                 
                                 let image = document.createElement('img');
                                 image.classList.add('image', 'img-responsive');
                                 image.src = json.videos[i].imagen;
+                                image.alt = "Video preview image";
                                 
                                 let bottom = document.createElement('div');
                                 bottom.classList.add('bottom');
@@ -198,19 +124,28 @@
                                 boxColumn.appendChild(image);
                                 boxColumn.appendChild(bottom);
 
-                                box.innerHTML = boxColumn;
+                                linkBox.innerHTML = boxColumn;
+                                box.innerHTML = linkBox;
                                 listaVideos.appendChild(box);
                             }
                         } 
                     })
                     .fail(function () {
-                       //alert("Error cargando videos");
+                       alert("Error cargando videos");
                     });
 
                 asd.always(function () {
                     //alert("second finished");
                 });
             });
+
+            function verVideo(idVideo,idUsuario,nombreUsuarioVideo){
+
+                var loggedUsername = document.getElementById('nombreUsuario');
+                var loggedUserId = document.getElementById('idUsuario');
+
+                window.location.replace("/video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
+            }
         </script>
     </body>
 </html>
