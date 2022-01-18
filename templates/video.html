@@ -11,19 +11,20 @@
 
         <div class="columns">
             <div class="section column is-four-fifths">
-                <video controls class="video" width="100%" src="https://www.youtube.com/681324c4-4a97-4fac-a097-d6a427bde958">
+                <video controls class="video" id="videoPlay" width="100%" src="https://www.youtube.com/681324c4-4a97-4fac-a097-d6a427bde958">
                 </video>
-                <h1 class="title">Titulo de video
+                <h1 class="title" id="tituloVideo">Titulo de video
                 </h1>
                 <div style="display:flex;justify-content: space-between;">
-                    <p>Fecha de subida</p>
+                    <p id="fechaSubida">Fecha de subida</p>
+                    <p id="fechaModificacion">fecha Modificacion</p>
                     <p>Votos</p>
                 </div>
                 <hr>
                 <a href=""><h2 class="subtitle">Nombre de usuario</h2></a>
                 <hr>
                 <div id="comentariosVideo">
-                    <p>Numero de Comentarios</p>
+                    <!--<p>Numero de Comentarios</p>
                     <br>
                     <div id="comentario">
                         <p><b>usuario que publico</b></p>
@@ -38,7 +39,7 @@
                     <div id="comentario">
                         <p><b>usuario que publico</b></p>
                         <p>este es un comentario sobre el video</p>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <div class="section column is-one-fifths">
@@ -59,10 +60,90 @@
               $('.modalRegister').load('fragments/modals/registerModal.html');
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
               $('.modalChangePassword').load('fragments/modals/changePasswordModal.html');
+
+              const urlParams = new URLSearchParams(window.location.search);
+              const idVideo = urlParams.get('idVideo');
+
+              var vres = "";
+                var asd = $.get(
+                    //"http://18.133.181.212/calculadora.php",
+                    "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+
+                    {op: "video", id: idVideo},
+                    function (data) {
+                    function jsonEscape(str) {
+                        return str
+                        .replace(/\n/g, "\\\\n")
+                        .replace(/\r/g, "\\\\r")
+                        .replace(/\t/g, "\\\\t");
+                    }
+
+                    //descomentar esta línea si se usa PHP :
+                    //var json=JSON.parse(data);
+                    //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                    var json = data;
+                    alert("page content: " + JSON.stringify(json));
+                    //document.getElementById("res").innerHTML =
+                        "Resultado recibido:" + json.res;
+                    //window.location.replace(json.redirect);
+                    }
+                )
+                    .done(function () {
+
+                        var video = document.getElementById('videoPlay');
+                        video.src = json.video.rutaAWS;
+
+                        var tituloVideo = document.getElementById('tituloVideo');
+                        tituloVideo.innerText = json.video.nombreVideo;
+
+                        var fechaSubida = document.getElementById('fechaSubida');
+                        fechaSubida.innerText = json.video.fechaSubida;
+
+                        var fechaModificacion = document.getElementById('fechaModificacion');
+                        fechaModificacion.innerText = json.video.ultimaModificacion;
+
+                        var comentarios = document.getElementById('comentariosVideo');
+                        var numeroComentarios = document.createElement('p');
+                        numeroComentarios.innerText = json.video.cometarios.length + " comentarios";
+                        comentarios.appendChild(numeroComentarios);
+
+                        for(var i=0;i<json.video.cometarios.length;++i){
+                            var cometario = document.createElement('div');
+                            var titulo = document.createElement('p');
+                            var tituloBold = document.createElement('b');
+                            var contenido = document.createElement('p');
+                            var saltoLinea = document.createElement('br');
+
+                            tituloBold.innerText = json.video.cometarios[i].nombreUsuario;
+                            contenido.innerText = json.video.cometarios[i].contenido;
+
+                            titulo.appendChild(tituloBold);
+                            cometario.appendChild(titulo);
+                            cometario.appendChild(contenido);
+                            comentarios.appendChild(saltoLinea);
+                            comentarios.appendChild(cometario);
+                        }
+
+                    })
+                    .fail(function () {
+                       alert("Error cargando video");
+                    });
+
+                asd.always(function () {
+                    //alert("second finished");
+                });
             });
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const idUsuario = urlParams.get('idUsuario');
+            body["video"] = {
+                "usuarioId": cur.fetchone()[0],
+                "nombreVideo": cur.fetchone()[1],
+                "nombreUsuario": cur.fetchone()[2],
+                "descripcion": cur.fetchone()[3],
+                "tamanyo": cur.fetchone()[4],
+                "rutaAWS": cur.fetchone()[5],
+                "fechaSubida": cur.fetchone()[6],
+                "ultimaModificacion": cur.fetchone()[7],
+                "tags": tagsDeVideo(conn,id)
         </script>
     </body>        
 </html>
