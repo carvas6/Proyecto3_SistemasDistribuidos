@@ -9,10 +9,39 @@
         <nav class="navbar" role="navigation" aria-label="main navigation">
         </nav>
         
-        <section id="listaVideos"></section>
+        <input type="hidden" id="idUsuario"><!--idUsuario-->
+        <input type="hidden" id="nombreUsuario"><!--nombreUsuario-->
+        
+        <div class="columns">
+            <div class="section is-clearfix column is-four-fifths">
 
-        <aside>Perfil</aside>
+                <div class="columns is-multiline" id="listaVideos">
 
+                    <!--<div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="height:fit-content;">
+                       <a onclick="verVideo()" style="color:black;">
+                        <div class="column is-narrow has-text-centered">
+                                <img class="image img-responsive" src="https://i.ytimg.com/vi/JsnzZF0_13I/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLALVlJo2arXiT9leYpAp7v3dIB4HA">
+
+                                <div class="bottom">
+                                    <h1 style="height:50px;overflow:hidden;" class="is-subtitle is-6"><b>Nombre Video muy largo como para que quepa en dos lineas a ver que pasa</b></h1>
+                                    <h2 class="is-subtitle is-6">username</h2>
+                                    <p>fecha subida</p>
+                                </div>
+                        </div>
+                       </a>
+                    </div>-->
+    
+                </div>
+            </div>
+            <div class="section column is-one-fifths">
+                <p>Información de perfil sólo si el usuario está logueado y es su perfil</p>
+            </div>
+        </div>
+        
+
+        <div class="modalLogin"></div>
+        <div class="modalRegister"></div>
+        <div class="modalForgotPassword"></div>
         <div class="modalChangePassword"></div>
 
         <script>
@@ -20,6 +49,9 @@
               $('.head').load('fragments/header.html');
               $('.navbar').load('fragments/navbar.html');
               $('.modalChangePassword').load('fragments/modals/changePasswordModal.html');
+              $('.modalLogin').load('fragments/modals/loginModal.html');
+              $('.modalRegister').load('fragments/modals/registerModal.html');
+              $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
 
               var usuarioId = document.getElementById("usuarioId").value;
 
@@ -48,17 +80,80 @@
                     }
                 )
                     .done(function () {
-                    //añadir videos
-                    alert("second success");
+                        //añadir videos
+                        var listaVideos = document.getElementById('listaVideos');
+                        if(json.videos.length==0){
+                            let emptyList = document.createElement('p');
+                            emptyList.classList.add('is-subtitle', 'is-2');
+                            emptyList.style="color:red;";
+                            emptyList.innerText ="Actualmente no hay ningún video";
+                            listaVideos.classList.add('has-text-centered');
+                            listaVideos.innerHTML = emptyList;
+                        }
+                        else{
+                            for(var i=0;i<json.videos.length;++i){
+                                let box = document.createElement('div');
+                                box.classList.add('column', 'is-full-mobile', 'is-half-tablet', 'is-one-third-desktop', 'is-one-quarter-widescreen', 'is-one-fifth-fullhd');
+                                
+                                let linkBox = document.createElement('a');
+                                linkBox.style = "color:black;";
+                                linkBox.setAttribute('onclick', "verVideo(" + json.videos[i].id + "," + json.videos[i].usuarioId + "," + json.videos[i].nombreUsuario + ")");
+
+                                let boxColumn = document.createElement('div');
+                                boxColumn.classList.add('column', 'is-narrow', 'has-text-centered');
+                                
+                                let image = document.createElement('img');
+                                image.classList.add('image', 'img-responsive');
+                                image.src = json.videos[i].imagen;
+                                image.alt = "Video preview image";
+                                
+                                let bottom = document.createElement('div');
+                                bottom.classList.add('bottom');
+
+                                let videoName = document.createElement('h1');
+                                videoName.classList.add('is-subtitle', 'is-6');
+                                videoName.style = "height:50px;overflow:hidden;";
+
+                                let videoNameBold = document.createElement('b');
+                                videoNameBold.innerText = json.videos[i].nombre;
+
+                                let videoUsername = document.createElement('h2');
+                                videoUsername.classList.add('is-subtitle', 'is-6');
+                                videoUsername.innerText = json.videos[i].nombreUsuario;
+
+                                let videoDate = document.createElement('p');
+                                videoDate.innerText = json.videos[i].fechaSubida;
+
+                                videoName.innerHTML = videoNameBold;
+                                bottom.appendChild(videoName);
+                                bottom.appendChild(videoUsername);
+                                bottom.appendChild(videoDate);
+
+                                boxColumn.appendChild(image);
+                                boxColumn.appendChild(bottom);
+
+                                linkBox.innerHTML = boxColumn;
+                                box.innerHTML = linkBox;
+                                listaVideos.appendChild(box);
+                            }
+                        }
                     })
                     .fail(function () {
                        alert("error cargando videos");
                     });
 
                 asd.always(function () {
-                    alert("second finished");
+                    //alert("second finished");
                 });
             });
+
+            function verVideo(idVideo,idUsuario,nombreUsuarioVideo){
+
+                var loggedUsername = document.getElementById('nombreUsuario');
+                var loggedUserId = document.getElementById('idUsuario');
+
+                window.location.replace("/video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
+            }
         </script>
     </body>
 </html>

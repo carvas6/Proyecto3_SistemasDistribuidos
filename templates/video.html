@@ -21,13 +21,15 @@
                     <p>Votos</p>
                 </div>
                 <hr>
-                <a href=""><h2 class="subtitle">Nombre de usuario</h2></a>
+                <a href="" id="usuarioVideoLink"><h2 class="subtitle" id="usuarioVideo">Nombre de usuario</h2></a>
+                <br>
+                <p id="descripcionVideo">Descripción Video</p>
                 <hr>
                 <div id="comentariosVideo">
                     <!--<p>Numero de Comentarios</p>
                     <br>
                     <div id="comentario">
-                        <p><b>usuario que publico</b></p>
+                        <a><p><b>usuario que publico</b></p>
                         <p>este es un comentario sobre el video</p>
                     </div>
                     <br>
@@ -102,6 +104,15 @@
                         var fechaModificacion = document.getElementById('fechaModificacion');
                         fechaModificacion.innerText = json.video.ultimaModificacion;
 
+                        var usuarioVideo = document.getElementById('usuarioVideo');
+                        usuarioVideo.innerText = json.video.nombreUsuario;
+
+                        var usuarioVideoLink = document.getElementById('usuarioVideoLink');
+                        usuarioVideoLink.href = "/profile.html?idUsuario=" + json.video.usuarioId;
+
+                        var descripcionVideo = document.getElementById('descripcionVideo');
+                        descripcionVideo.innerText = json.video.descripcion;
+
                         var comentarios = document.getElementById('comentariosVideo');
                         var numeroComentarios = document.createElement('p');
                         numeroComentarios.innerText = json.video.cometarios.length + " comentarios";
@@ -109,6 +120,7 @@
 
                         for(var i=0;i<json.video.cometarios.length;++i){
                             var cometario = document.createElement('div');
+                            var tituloLink = document.createElement('a');
                             var titulo = document.createElement('p');
                             var tituloBold = document.createElement('b');
                             var contenido = document.createElement('p');
@@ -116,9 +128,11 @@
 
                             tituloBold.innerText = json.video.cometarios[i].nombreUsuario;
                             contenido.innerText = json.video.cometarios[i].contenido;
+                            tituloLink.href="/profile.html?idUsuario=" + json.video.cometarios[i].idUsuario;
 
                             titulo.appendChild(tituloBold);
-                            cometario.appendChild(titulo);
+                            tituloLink.appendChild(titulo);
+                            cometario.appendChild(tituloLink);
                             cometario.appendChild(contenido);
                             comentarios.appendChild(saltoLinea);
                             comentarios.appendChild(cometario);
@@ -133,17 +147,6 @@
                     //alert("second finished");
                 });
             });
-
-            body["video"] = {
-                "usuarioId": cur.fetchone()[0],
-                "nombreVideo": cur.fetchone()[1],
-                "nombreUsuario": cur.fetchone()[2],
-                "descripcion": cur.fetchone()[3],
-                "tamanyo": cur.fetchone()[4],
-                "rutaAWS": cur.fetchone()[5],
-                "fechaSubida": cur.fetchone()[6],
-                "ultimaModificacion": cur.fetchone()[7],
-                "tags": tagsDeVideo(conn,id)
         </script>
     </body>        
 </html>
