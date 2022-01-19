@@ -271,6 +271,27 @@ def recuperarContrasenya(user,nuevaContrasenya,fraseRecuperacion):
         'body' : json.dumps(body)
     }
 
+def cambiarContrasenya(id,nuevaContrasenya):
+    conn = connect()
+    body = {}
+    try:
+        with conn.cursor() as cur:
+            cur.execute("update Usuario set contrasenya="+nuevaContrasenya+" where id="+str(id))
+            conn.commit()
+    except pymysql.MySQLError as e:
+        print(e)
+        body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
+    return {
+        'statusCode': 200,
+        'headers': { 'Access-Control-Allow-Origin' : '*' },
+        'body' : json.dumps(body)
+    }
+
 def buscarVideos(busqueda,tags,limit):
     conn = connect()
     body = {}
@@ -556,6 +577,10 @@ def lambda_handler(event , context):
         nuevaContrasenya = event["queryStringParameters"]["nuevaContrasenya"]
         fraseRecuperacion = event["queryStringParameters"]["fraseRecuperacion"]
         recuperarContrasenya(user,nuevaContrasenya,fraseRecuperacion)
+    if op == "cambiarContrasenya":
+        id = event["queryStringParameters"]["id"]
+        nuevaContrasenya = event["queryStringParameters"]["nuevaContrasenya"]
+        cambiarContrasenya(id,nuevaContrasenya)
     if op == "buscarVideos":
         busqueda = event["queryStringParameters"]["busqueda"]
         tags = json.loads(event["queryStringParameters"]["tags"])
