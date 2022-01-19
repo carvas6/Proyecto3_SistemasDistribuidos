@@ -96,7 +96,11 @@
                                 
                                 let image = document.createElement('img');
                                 image.classList.add('image', 'img-responsive');
-                                image.src = json.videos[i].imagen;
+                                if(json.videos[i].imagen==null){
+                                    image.src = "/static/images/videoImageDeafult.png";
+                                }else{
+                                    image.src = json.videos[i].imagen;
+                                }
                                 image.alt = "Video preview image";
                                 
                                 let bottom = document.createElement('div');
