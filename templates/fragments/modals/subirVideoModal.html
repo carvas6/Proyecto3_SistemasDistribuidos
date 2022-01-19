@@ -52,9 +52,6 @@
                                   </div>
                               </div>
 
-                              <input type="hidden" id="idUsuario"><!--idUsuario-->
-                              <input type="hidden" id="nombreUsuario"><!--nombreUsuario-->
-
                           <button class="button is-link" id="uploadVideoButton">Subir Video
                           </button>
                   </div>
@@ -63,7 +60,7 @@
       </div>
     </section>
   </div>
-  <button class="modal-close is-large" aria-label="close" onclick="$('#modalForgotPassword').removeClass('is-active')"></button>
+  <button class="modal-close is-large" aria-label="close" onclick="$('#modalUploadVideo').removeClass('is-active')"></button>
 </div>
 <script>
     $(document).ready(function () {
@@ -102,7 +99,7 @@
               document.getElementById('videoArchive').innerText="Formato de archivo no válido";
             }
             else{
-              $('#modalForgotPassword').removeClass('is-active');
+              $('#modalUploadVideo').removeClass('is-active');
               //swal video subido correctamente
             }
           })

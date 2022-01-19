@@ -35,6 +35,7 @@
             </div>
             <div class="section column is-one-fifths">
                 <p>Información de perfil sólo si el usuario está logueado y es su perfil</p>
+                <a href="">Subir Video</a>
             </div>
         </div>
         
@@ -43,6 +44,7 @@
         <div class="modalRegister"></div>
         <div class="modalForgotPassword"></div>
         <div class="modalChangePassword"></div>
+        <div class="modalUploadVideo"></div>
 
         <script>
             $(document).ready(function () {
@@ -52,6 +54,7 @@
               $('.modalLogin').load('fragments/modals/loginModal.html');
               $('.modalRegister').load('fragments/modals/registerModal.html');
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
+              $('.modalUploadVideo').load('fragments/modals/modalUploadVideo.html');
 
               var usuarioId = document.getElementById("usuarioId").value;
 
