@@ -420,6 +420,27 @@ def nuevoVideo(usuarioId,tamanyo,rutaAWS,nombre,descripcion,tags):
         'headers': { 'Access-Control-Allow-Origin' : '*' },
         'body' : json.dumps(body)
     }
+
+def insertarMiniatura(id,rutaAWS):
+    conn = connect()
+    body = {}
+    try:
+        with conn.cursor() as cur:
+            cur.execute("update Video set rutaAWSMiniatura = "+rutaAWS+" where id = "+str(id))
+            conn.commit()
+    except pymysql.MySQLError as e:
+        print(e)
+        body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
+    return {
+        'statusCode': 200,
+        'headers': { 'Access-Control-Allow-Origin' : '*' },
+        'body' : json.dumps(body)
+    }
 #-------------------------------
 
 # FUNCIONES DE video.html
@@ -617,6 +638,10 @@ def lambda_handler(event , context):
         descripcion = event["queryStringParameters"]["descripcion"]
         tags = event["queryStringParameters"]["tags"].split()
         return nuevoVideo(usuarioId,tamanyo,rutaAWS,nombre,descripcion,tags)
+    if op == "insertarMiniatura":
+        id = event["queryStringParameters"]["videoId"]
+        rutaAWS = event["queryStringParameters"]["rutaAWS"]
+        insertarMiniatura(id,rutaAWS)
     if op == "video":
         id = event["queryStringParameters"]["id"]
         return video(id)
