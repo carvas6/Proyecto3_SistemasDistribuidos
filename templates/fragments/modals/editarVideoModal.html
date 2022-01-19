@@ -36,6 +36,7 @@
                                           <input id="tagsVideoEdit"
                                               type="text"
                                               class="input"
+                                              value=""
                                               placeholder="Introduce tags separados por un espacio (serán los nuevos tags del video)"/>
                                         <span id="errorTagsNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no puede contener '#' ni '@'--></span>
                                       </div>
@@ -71,6 +72,7 @@
       var nombreVideo = document.getElementById("videoNameEdit").value;
       var tagsVideo = document.getElementById("tagsVideoEdit").value;
       var descriptionVideo = document.getElementById("descriptionVideoEdit").value;
+      var videoId = document.getElementById("editVideoId").value;
 
       if(tiene_letras(nombreVideo) == 1){
         nombreVideo.setCustomValidity("Nombre de video no puede contener '#' ni '@'");
@@ -83,7 +85,7 @@
         //"http://18.133.181.212/calculadora.php",
         "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
 
-        { op: "editarVideo", videoId: , nombre: nombreVideo, descripcion: descriptionVideo, tags: tagsVideo},
+        { op: "editarVideo", videoId: videoId, nombre: nombreVideo, descripcion: descriptionVideo, tags: tagsVideo},
         function (data) {
             function jsonEscape(str) {
             return str
