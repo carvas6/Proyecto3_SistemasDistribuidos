@@ -28,7 +28,7 @@
                         />
                         <span
                             id="errorUsernameRegister" style="color:red;"
-                        ><!--Mensaje de error contraseñas muy corta--></span>
+                        ><!--Mensaje de error nombre de usuario ya existe--></span>
                       </div>
                     </div>
 
@@ -81,6 +81,25 @@
                         />
                       </div>
                     </div>
+
+                    <div class="field">
+                      <div class="label" for="emailRegister">
+                        Dirección de e-mail
+                      </div>
+                      <div class="control">
+                        <input
+                          type="email"
+                          id="emailRegister"
+                          class="input"
+                          placeholder="tu@email.com"
+                        />
+                        <span
+                              id="errorEmailRegister" style="color:red;"
+                          ><!--Mensaje de email ocupado--></span
+                          >
+                      </div>
+                    </div>
+
                   </div>
                 </div>
                 <div class="field">
@@ -99,23 +118,6 @@
                     </div>
                   </div>
 
-                  <div class="field">
-                    <div class="label" for="emailRegister">
-                      Dirección de e-mail
-                    </div>
-                    <div class="control">
-                      <input
-                        type="email"
-                        id="emailRegister"
-                        class="input"
-                        placeholder="tu@email.com"
-                      />
-                      <span
-                            id="errorEmailRegister" style="color:red;"
-                        ><!--Mensaje de email ocupado--></span
-                        >
-                    </div>
-                  </div>
                 </div>
 
                 <button class="button is-link" id="buttonRegister">
@@ -156,9 +158,15 @@
 
       if(contrasenya!=passwordConfirm){
         document.getElementById('errorPasswordConfirmRegister').innerText = "Las contraseñas no coinciden";
+        document.getElementById('errorPasswordRegister').innerText = "";
+        document.getElementById('errorEmailRegister').innerText="";
+        document.getElementById('errorUsernameRegister').innerText="";
       }
       else if(contrasenya.length<8){
         document.getElementById('errorPasswordRegister').innerText = "La contraseña debe tener al menos 8 carácteres";
+        document.getElementById('errorPasswordConfirmRegister').innerText = "";
+        document.getElementById('errorEmailRegister').innerText="";
+        document.getElementById('errorUsernameRegister').innerText="";
       }
       else{
         var vres = "";
@@ -188,9 +196,15 @@
         .done(function () {
             if(json.nombreUsuario==false){
                 document.getElementById('errorUsernameRegister').innerText="Nombre de usuario ya existe";
+                document.getElementById('errorPasswordConfirmRegister').innerText = "";
+                document.getElementById('errorPasswordRegister').innerText = "";
+                document.getElementById('errorEmailRegister').innerText="";
             }
             else if(json.email==false){
                 document.getElementById('errorEmailRegister').innerText="Email ya está registrado";
+                document.getElementById('errorUsernameRegister').innerText="";
+                document.getElementById('errorPasswordConfirmRegister').innerText = "";
+                document.getElementById('errorPasswordRegister').innerText = "";
             }
             else{
                 //loguear al usuario (descargar cookies)
