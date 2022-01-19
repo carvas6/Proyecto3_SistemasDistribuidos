@@ -12,6 +12,8 @@
 
     <script>
         $(document).ready(function () {
+            $('.head').load('fragments/header.html');
+            $('.navbar').load('fragments/navbar.html');
 
             const urlParams = new URLSearchParams(window.location.search);
 
@@ -19,13 +21,14 @@
             const nombreUsuario = urlParams.get('nombreUsuario');
             const nombreVideo = urlParams.get('nombreVideo');
             const descriptionVideo = urlParams.get('descriptionVideo');
+            const tagsVideo = urlParams.get('tagsVideo');
     
             var vres = "";
             var asd = $.get(
             //"http://18.133.181.212/calculadora.php",
             "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
     
-            { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo},
+            { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo, rutaAWS:, tags: tagsVideo},
             function (data) {
                 function jsonEscape(str) {
                 return str

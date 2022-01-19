@@ -3,11 +3,11 @@
   function getAWSKeys() {
     var asd=$.get(
          "http://3.237.76.160/keys_gateway.php",
-          {},
+          {op: "subir"},
           function(data) {
   
-             var json=JSON.parse(data);
-                         json=JSON.parse(json);
+             var json=data;
+             //json=JSON.parse(json);
              document.getElementById("Policy").value = json.stringToSign;
              document.getElementById("X-Amz-Credential").value = json.xAmzCredential;		
              document.getElementById("X-Amz-Date").value = json.amzDate;		
@@ -18,16 +18,36 @@
       )
     
   }
+
+  function tiene_letras(texto){
+    texto = texto.toLowerCase();
+    for(i=0; i<texto.length; i++){
+        if (letras.indexOf(texto.charAt(i),0)!=-1){
+          return 1;
+        }
+    }
+    return 0;
+  }
   
   function setKeyFilename() {
-    document.getElementById("key").value = document.getElementById("file").value.substring(document.getElementById("file").value.lastIndexOf('\\')+1);	
+    var caracteresEspeciales="#@";
+    var nombreVideo = document.getElementById("videoName").value;
+    var tagsVideo = document.getElementById("tagsVideo").value;
+
+    if(tiene_letras(nombreVideo) == 1){
+      nombreVideo.setCustomValidity("Nombre de video no puede contener '#' ni '@'");
+    }else if(tiene_letras(tagsVideo) == 1){
+      tagsVideo.setCustomValidity("Tags de video no puede contener '#' ni '@'");
+    }    
+
+
+    document.getElementById("key").value = document.getElementById("videoArchive").value.substring(document.getElementById("videoArchive").value.lastIndexOf('\\')+1);	
     
     var idUsuario = document.getElementById("idUsuario").value;
     var nombreUsuario = document.getElementById("nombreUsuario").value;
-    var nombreVideo = document.getElementById("videoName").value;
     var descriptionVideo = document.getElementById("descriptionVideo").value;
     
-    var redirect = document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo;
+    var redirect = document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo;
   }
   
   </script>
@@ -71,7 +91,7 @@
                                               type="text"
                                               class="input"
                                               placeholder="Nombre Video"/>
-                                            <span id="errorNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no ùede contener '#' ni '@'--></span>
+                                            <span id="errorNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no puede contener '#' ni '@'--></span>
                                       </div>
                                   </div>
 
@@ -92,7 +112,7 @@
                                               type="text"
                                               class="input"
                                               placeholder="Introduce tags separados por un espacio"/>
-                                        <span id="errorTagsNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no ùede contener '#' ni '@'--></span>
+                                        <span id="errorTagsNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no puede contener '#' ni '@'--></span>
                                       </div>
                                   </div>
                               </div>
