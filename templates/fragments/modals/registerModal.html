@@ -209,6 +209,7 @@
             else{
                 //loguear al usuario (descargar cookies)
                 $("#modalRegister").removeClass("is-active");
+                window.location.replace("profile.html?idUsuario=" + json.id + "loggedUserId=" + json.id + "&loggedUsername=" + nombreUsuario);
             }
         })
         .fail(function () {

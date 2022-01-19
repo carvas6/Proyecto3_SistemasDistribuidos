@@ -33,7 +33,7 @@
     
                 </div>
             </div>
-            <div class="section column is-one-fifths">
+            <div class="section column is-one-fifths" id="infoPerfil">
                 <p>Información de perfil sólo si el usuario está logueado y es su perfil</p>
                 <a href="">Subir Video</a>
             </div>
@@ -56,14 +56,28 @@
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
               $('.modalUploadVideo').load('fragments/modals/modalUploadVideo.html');
 
-              var usuarioId = document.getElementById("usuarioId").value;
+                var usuarioId = document.getElementById("idUsuario").value;
+
+                const urlParams = new URLSearchParams(window.location.search);
+
+                const idUsuario = urlParams.get('idUsuario');
+
+                if(usuarioId==null){
+                    document.getElementById("infoPerfil").style="display:none;";
+                }
+                else if(usuarioId == idUsuario){
+                    document.getElementById("infoPerfil").style="display:inline-block;";
+                }
+                else{
+                    document.getElementById("infoPerfil").style="display:none;";
+                }
 
                 var vres = "";
                 var asd = $.get(
                     //"http://18.133.181.212/calculadora.php",
                     "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
 
-                    { op: "misvideos", usuarioId: usuarioId},
+                    { op: "misvideos", usuarioId: idUsuario},
                     function (data) {
                     function jsonEscape(str) {
                         return str
@@ -142,7 +156,7 @@
                         }
                     })
                     .fail(function () {
-                       alert("error cargando videos");
+                        swal('','Error cargando videos', 'error');
                     });
 
                 asd.always(function () {

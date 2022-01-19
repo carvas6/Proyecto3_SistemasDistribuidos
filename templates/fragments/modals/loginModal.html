@@ -73,6 +73,7 @@
 </div>
 <script>
   $(document).ready(function () {
+    document.getElementById('errorLogin').innerText="";
     $("#loginButton").click(function () {
       var usuario = document.getElementById("usernameLogin").value;
       var contrasenya = document.getElementById("passwordLogin").value;
@@ -108,15 +109,15 @@
           else{
             //loguear al usuario (descargar cookies)
             $('#modalLogin').removeClass('is-active');
-            window.location.replace("profile.html");
+            window.location.replace("profile.html?idUsuario=" + json.id + "loggedUserId=" + json.id + "&loggedUsername=" + json.nombreUsuario);
           }
         })
         .fail(function () {
-          alert("error logueando al usuario");
+          swal('','Error logueando al usuario', 'error');
         });
 
       asd.always(function () {
-        alert("second finished");
+        //alert("second finished");
       });
     });
   });
