@@ -1,7 +1,7 @@
 CREATE TABLE Video(
     usuarioId INT(11) NOT NULL,
-    tamanyo FLOAT(11) NOT NULL,
     rutaAWS VARCHAR(500) UNIQUE NOT NULL,
+    rutaAWSMiniatura VARCHAR(500),
     id INT(11) PRIMARY KEY AUTO_INCREMENT,
     fechaSubida DateTime DEFAULT NOW(),
     nombre VARCHAR(100) NOT NULL,
