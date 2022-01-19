@@ -551,6 +551,11 @@ def lambda_handler(event , context):
         contrasenya = event["queryStringParameters"]["contrasenya"]
         fraseRecuperacion = event["queryStringParameters"]["fraseRecuperacion"]
         return registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion)
+    if op == "recuperarContrasenya":
+        user = event["queryStringParameters"]["usuario"]
+        nuevaContrasenya = event["queryStringParameters"]["nuevaContrasenya"]
+        fraseRecuperacion = event["queryStringParameters"]["fraseRecuperacion"]
+        recuperarContrasenya(user,nuevaContrasenya,fraseRecuperacion)
     if op == "buscarVideos":
         busqueda = event["queryStringParameters"]["busqueda"]
         tags = json.loads(event["queryStringParameters"]["tags"])
@@ -564,18 +569,30 @@ def lambda_handler(event , context):
     if op == "nuevoVideo":
         usuarioId = event["queryStringParameters"]["usuarioId"]
         tamanyo = event["queryStringParameters"]["tamanyo"]
+        rutaAWS = event["queryStringParameters"]["rutaAWS"]
         nombre = event["queryStringParameters"]["nombre"]
         descripcion = event["queryStringParameters"]["descripcion"]
-        return nuevoVideo(usuarioId,tamanyo,nombre,descripcion)
+        tags = json.loads(event["queryStringParameters"]["tags"])
+        return nuevoVideo(usuarioId,tamanyo,rutaAWS,nombre,descripcion,tags)
     if op == "video":
         id = event["queryStringParameters"]["id"]
         return video(id)
+    if op == "editarVideo":
+        id = event["queryStringParameters"]["videoId"]
+        nombre = event["queryStringParameters"]["nombre"]
+        descripcion = event["queryStringParameters"]["descripcion"]
+        editarVideo(id,nombre,descripcion)
     if op == "comentar":
         usuarioId = event["queryStringParameters"]["usuarioId"]
         videoId = event["queryStringParameters"]["videoId"]
         contenido = event["queryStringParameters"]["contenido"]
         comentarioPadreId = event["queryStringParameters"]["comentarioPadreId"]
         return comentar(usuarioId,videoId,contenido,comentarioPadreId)
+    if op == "votar":
+        usuarioId = event["queryStringParameters"]["usuarioId"]
+        videoId = event["queryStringParameters"]["videoId"]
+        valor = event["queryStringParameters"]["valor"]
+        votar(usuarioId,videoId,valor)
     return {
         'statusCode': 200,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
