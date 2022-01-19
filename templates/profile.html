@@ -29,13 +29,14 @@
                                 </div>
                         </div>
                        </a>
+                       <a onclick="editarVideo(videoId)" style="color:red" class="editarVideoButton">Editar Video</a>
                     </div>-->
     
                 </div>
             </div>
-            <div class="section column is-one-fifths">
+            <div class="section column is-one-fifths" id="infoPerfil">
                 <p>Información de perfil sólo si el usuario está logueado y es su perfil</p>
-                <a href="">Subir Video</a>
+                <a onclick="$('#modalUploadVideo').addClass('is-active')">Subir Video</a>
             </div>
         </div>
         
@@ -45,6 +46,7 @@
         <div class="modalForgotPassword"></div>
         <div class="modalChangePassword"></div>
         <div class="modalUploadVideo"></div>
+        <div class="modalEditarVideo"></div>
 
         <script>
             $(document).ready(function () {
@@ -55,15 +57,42 @@
               $('.modalRegister').load('fragments/modals/registerModal.html');
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
               $('.modalUploadVideo').load('fragments/modals/modalUploadVideo.html');
+              $('.modalEditarVideo').load('fragments/modals/editarVideoModal.html');
 
-              var usuarioId = document.getElementById("usuarioId").value;
+                var usuarioId = document.getElementById("idUsuario").value;
+
+                const urlParams = new URLSearchParams(window.location.search);
+
+                const idUsuario = urlParams.get('idUsuario');
+
+                if(usuarioId==null){
+                    document.getElementById("infoPerfil").style="display:none;";
+                    var botonEditar = document.getElementsByClassName("editarVideoButton");
+                    for(var i=0;i<botonEditar.length;++i){
+                        botonEditar.style="display:none;";
+                    }
+                }
+                else if(usuarioId == idUsuario){
+                    document.getElementById("infoPerfil").style="display:inline-block;";
+                    var botonEditar = document.getElementsByClassName("editarVideoButton");
+                    for(var i=0;i<botonEditar.length;++i){
+                        botonEditar.style="display:block;";
+                    }
+                }
+                else{
+                    document.getElementById("infoPerfil").style="display:none;";
+                    var botonEditar = document.getElementsByClassName("editarVideoButton");
+                    for(var i=0;i<botonEditar.length;++i){
+                        botonEditar.style="display:none;";
+                    }
+                }
 
                 var vres = "";
                 var asd = $.get(
                     //"http://18.133.181.212/calculadora.php",
                     "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
 
-                    { op: "misvideos", usuarioId: usuarioId},
+                    { op: "misvideos", usuarioId: idUsuario},
                     function (data) {
                     function jsonEscape(str) {
                         return str
@@ -127,6 +156,11 @@
                                 let videoDate = document.createElement('p');
                                 videoDate.innerText = json.videos[i].fechaSubida;
 
+                                let linkEdit = document.createElement('a');
+                                linkEdit.style = "color:red;";
+                                linkEdit.setAttribute('onclick', "editarVideo(" + json.videos[i].id + ")");
+                                linkEdit.classList.add('editarVideoButton');
+
                                 videoName.innerHTML = videoNameBold;
                                 bottom.appendChild(videoName);
                                 bottom.appendChild(videoUsername);
@@ -136,13 +170,14 @@
                                 boxColumn.appendChild(bottom);
 
                                 linkBox.innerHTML = boxColumn;
-                                box.innerHTML = linkBox;
+                                box.appendChild(linkBox);
+                                box.appendChild(linkEdit);
                                 listaVideos.appendChild(box);
                             }
                         }
                     })
                     .fail(function () {
-                       alert("error cargando videos");
+                        swal('','Error cargando videos', 'error');
                     });
 
                 asd.always(function () {
@@ -156,6 +191,11 @@
                 var loggedUserId = document.getElementById('idUsuario');
 
                 window.location.replace("/video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
+            }
+
+            function editarVideo(videoId){
+                document.getElementById('editVideoId').value = videoId;
+                $('#modalEditarVideo').addClass('is-active');
             }
         </script>
     </body>

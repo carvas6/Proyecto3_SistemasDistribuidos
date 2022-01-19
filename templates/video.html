@@ -9,6 +9,9 @@
         <nav class="navbar" role="navigation" aria-label="main navigation">
         </nav>
 
+        <input type="hidden" id="idUsuario"><!--idUsuario-->
+        <input type="hidden" id="nombreUsuario"><!--nombreUsuario-->
+
         <div class="columns">
             <div class="section column is-four-fifths">
                 <video controls class="video" id="videoPlay" width="100%" src="https://www.youtube.com/681324c4-4a97-4fac-a097-d6a427bde958">
@@ -21,7 +24,7 @@
                     <p>Votos</p>
                 </div>
                 <hr>
-                <a href="" id="usuarioVideoLink"><h2 class="subtitle" id="usuarioVideo">Nombre de usuario</h2></a>
+                <a href="" id="usuarioVideoLink" class="Link-large"><h2 class="subtitle" id="usuarioVideo">Nombre de usuario</h2></a>
                 <br>
                 <p id="descripcionVideo">Descripción Video</p>
                 <hr>
@@ -57,7 +60,7 @@
         <script>
             $(document).ready(function () {
               $('.head').load('fragments/header.html');
-              $('.navbar').load('fragments/navbar.html');
+              
               $('.modalLogin').load('fragments/modals/loginModal.html');
               $('.modalRegister').load('fragments/modals/registerModal.html');
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
@@ -108,6 +111,7 @@
                         usuarioVideo.innerText = json.video.nombreUsuario;
 
                         var usuarioVideoLink = document.getElementById('usuarioVideoLink');
+
                         usuarioVideoLink.href = "/profile.html?idUsuario=" + json.video.usuarioId;
 
                         var descripcionVideo = document.getElementById('descripcionVideo');
@@ -128,6 +132,7 @@
 
                             tituloBold.innerText = json.video.cometarios[i].nombreUsuario;
                             contenido.innerText = json.video.cometarios[i].contenido;
+                            tituloLink.classList.add('Link-large');
                             tituloLink.href="/profile.html?idUsuario=" + json.video.cometarios[i].idUsuario;
 
                             titulo.appendChild(tituloBold);
@@ -137,14 +142,14 @@
                             comentarios.appendChild(saltoLinea);
                             comentarios.appendChild(cometario);
                         }
-
+                        
                     })
                     .fail(function () {
-                       alert("Error cargando video");
+                        swal('','Error cargando video', 'error');
                     });
 
                 asd.always(function () {
-                    //alert("second finished");
+                    $('.navbar').load('fragments/navbar.html');
                 });
             });
         </script>

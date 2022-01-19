@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <div class="head"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <title>UtadTube Inicio</title>
+    </head>
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+        </nav>
+
+        <input type="hidden" id="idUsuario"><!--idUsuario-->
+        <input type="hidden" id="nombreUsuario"><!--nombreUsuario-->
+
+        <p class="text-center">VIDEO SUBIDO A S3 CORRECTAMENTE</p>
+
+        <div class="modalUploadVideo"></div>
+
+    <script>
+        $(document).ready(function () {
+            $('.head').load('fragments/header.html');
+            $('.navbar').load('fragments/navbar.html');
+            $('.modalUploadVideo').load('fragments/modals/modalUploadVideo.html');
+            $('#modalUploadVideo').removeClass('is-active');
+
+
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const idUsuario = urlParams.get('idUsuario');
+            const nombreUsuario = urlParams.get('nombreUsuario');
+            const nombreVideo = urlParams.get('nombreVideo');
+            const descriptionVideo = urlParams.get('descriptionVideo');
+            const tagsVideo = urlParams.get('tagsVideo');
+    
+            var vres = "";
+            var asd = $.get(
+            //"http://18.133.181.212/calculadora.php",
+            "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+    
+            { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo, rutaAWS:, tags: tagsVideo},
+            function (data) {
+                function jsonEscape(str) {
+                return str
+                    .replace(/\n/g, "\\\\n")
+                    .replace(/\r/g, "\\\\r")
+                    .replace(/\t/g, "\\\\t");
+                }
+    
+                //descomentar esta línea si se usa PHP :
+                //var json=JSON.parse(data);
+                //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                var json = data;
+                alert("page content: " + JSON.stringify(json));
+                document.getElementById("res").innerHTML =
+                "Resultado recibido:" + json.res;
+            }
+            )
+            .done(function () {
+                $('#modalUploadVideo').removeClass('is-active');
+                swal('','Video guardado correctamente en la BBDD', 'success');
+                window.location.replace(json.redirect);
+            })
+            .fail(function () {
+                swal('','Error guardando el video en la BBDD', 'error');
+                window.location.replace(json.redirect);
+            });
+    
+            asd.always(function () {
+            //alert("second finished");
+            });
+        });
+    </script>
+    </body>
+</html>

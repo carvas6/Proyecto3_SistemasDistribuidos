@@ -1,3 +1,56 @@
+<script>
+
+  function getAWSKeys() {
+    var asd=$.get(
+         "http://3.237.76.160/keys_gateway.php",
+          {op: "subir"},
+          function(data) {
+  
+             var json=data;
+             //json=JSON.parse(json);
+             document.getElementById("Policy").value = json.stringToSign;
+             document.getElementById("X-Amz-Credential").value = json.xAmzCredential;		
+             document.getElementById("X-Amz-Date").value = json.amzDate;		
+             document.getElementById("X-Amz-Signature").value = json.stringSigned;	
+             document.getElementById("X-Amz-Security-Token").value = json.securityToken;	
+        
+          }
+      )
+    
+  }
+
+  function tiene_letras(texto){
+    texto = texto.toLowerCase();
+    for(i=0; i<texto.length; i++){
+        if (letras.indexOf(texto.charAt(i),0)!=-1){
+          return 1;
+        }
+    }
+    return 0;
+  }
+  
+  function setKeyFilename() {
+    var caracteresEspeciales="#@";
+    var nombreVideo = document.getElementById("videoName").value;
+    var tagsVideo = document.getElementById("tagsVideo").value;
+
+    if(tiene_letras(nombreVideo) == 1){
+      nombreVideo.setCustomValidity("Nombre de video no puede contener '#' ni '@'");
+    }else if(tiene_letras(tagsVideo) == 1){
+      tagsVideo.setCustomValidity("Tags de video no puede contener '#' ni '@'");
+    }    
+
+
+    document.getElementById("key").value = document.getElementById("videoArchive").value.substring(document.getElementById("videoArchive").value.lastIndexOf('\\')+1);	
+    
+    var idUsuario = document.getElementById("idUsuario").value;
+    var nombreUsuario = document.getElementById("nombreUsuario").value;
+    var descriptionVideo = document.getElementById("descriptionVideo").value;
+    
+    var redirect = document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario;
+  }
+  
+  </script>
 <div class="modal" id="modalUploadVideo">
   <div class="modal-background"></div>
   <div class="modal-card">
@@ -7,6 +60,7 @@
           <div class="container">
               <div class="columns is-centered">
                   <div class="column">
+                    <form action="http://pruebauploadutad.s3.us-east-1.amazonaws.com/" onsubmit="setKeyFilename()" method="post" enctype="multipart/form-data">
                               <div class="box has-background-light">
                                   <div class="field">
                                       <label class="label" for="videoArchive">Video</label>
@@ -20,13 +74,24 @@
                                   </div>
 
                                   <div class="field">
+                                    <label class="label" for="imageArchive">Preview Image</label>
+                                    <div class="control">
+                                        <input id="imageArchive"
+                                            type="file"
+                                            class="input"
+                                            placeholder="Sube aqui tu archivo de video" required/>
+                                            <span id="errorTypeImageUpload" style="color:red;"><!--Mensaje de error tipo de archivo no válido--></span>
+                                    </div>
+                                </div>
+
+                                  <div class="field">
                                       <label class="label" for="videoName">Nombre Video</label>
                                       <div class="control">
                                           <input id="videoName"
                                               type="text"
                                               class="input"
                                               placeholder="Nombre Video"/>
-                                            <span id="errorNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no ùede contener '#' ni '@'--></span>
+                                            <span id="errorNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no puede contener '#' ni '@'--></span>
                                       </div>
                                   </div>
 
@@ -36,7 +101,7 @@
                                         <input id="descriptionVideo"
                                             type="text"
                                             class="input"
-                                            placeholder="Nombre Video"/>
+                                            placeholder="Descripción Video"/>
                                     </div>
                                 </div>
                                   
@@ -47,13 +112,23 @@
                                               type="text"
                                               class="input"
                                               placeholder="Introduce tags separados por un espacio"/>
-                                        <span id="errorTagsNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no ùede contener '#' ni '@'--></span>
+                                        <span id="errorTagsNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no puede contener '#' ni '@'--></span>
                                       </div>
                                   </div>
                               </div>
+                              <input type="hidden"  id="X-Amz-Credential" name="X-Amz-Credential" value="" />
+                              <input type="hidden"  id="X-Amz-Date" name="X-Amz-Date" value="" />
+                              <input type="hidden"  id="Policy" name="Policy" value="" />
+                              <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
+                              <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
+                              <input type="hidden" name="acl" value="public-read" />
+                              <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="http://pruebauploadutad.s3-website-us-east-1.amazonaws.com/successVideoUpload.html" />
+                              <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
+                              <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
 
-                          <button class="button is-link" id="uploadVideoButton">Subir Video
+                          <button class="button is-link" type="submit" id="uploadVideoButton">Subir Video
                           </button>
+                        </form>
                   </div>
               </div>
           </div>
@@ -64,52 +139,6 @@
 </div>
 <script>
     $(document).ready(function () {
-      $("#uploadVideoButton").click(function () {
-        var idUsuario = document.getElementById("idUsuario").value;
-        var nombreUsuario = document.getElementById("nombreUsuario").value;
-        var nombreVideo = document.getElementById("videoName").value;
-        var descriptionVideo = document.getElementById("descriptionVideo").value;
-  
-        var vres = "";
-        var asd = $.get(
-          //"http://18.133.181.212/calculadora.php",
-          "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
-  
-          { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo},
-          function (data) {
-            function jsonEscape(str) {
-              return str
-                .replace(/\n/g, "\\\\n")
-                .replace(/\r/g, "\\\\r")
-                .replace(/\t/g, "\\\\t");
-            }
-  
-            //descomentar esta línea si se usa PHP :
-            //var json=JSON.parse(data);
-            //descomentar esta línea si se usa lambda-apigateway : var json=data;
-            var json = data;
-            alert("page content: " + JSON.stringify(json));
-            document.getElementById("res").innerHTML =
-              "Resultado recibido:" + json.res;
-            //window.location.replace(json.redirect);
-          }
-        )
-          .done(function () {
-            if(json.video==false){
-              document.getElementById('videoArchive').innerText="Formato de archivo no válido";
-            }
-            else{
-              $('#modalUploadVideo').removeClass('is-active');
-              //swal video subido correctamente
-            }
-          })
-          .fail(function () {
-            alert("error subiendo el video");
-          });
-  
-        asd.always(function () {
-          //alert("second finished");
-        });
-      });
+      getAWSKeys();
     });
   </script>
