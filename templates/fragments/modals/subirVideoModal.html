@@ -47,7 +47,7 @@
     var nombreUsuario = document.getElementById("nombreUsuario").value;
     var descriptionVideo = document.getElementById("descriptionVideo").value;
     
-    document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario;
+    document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&rutaAWSvideo=" + document.getElementById("X-Amz-Signature").value;
   }
   
   </script>

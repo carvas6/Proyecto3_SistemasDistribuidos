@@ -33,7 +33,7 @@
               
               var idVideo = document.getElementById("idVideo").value;
               
-              document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + ;
+              document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + document.getElementById("X-Amz-Signature").value;
             }
             
         </script>
@@ -90,13 +90,14 @@
             const nombreVideo = urlParams.get('nombreVideo');
             const descriptionVideo = urlParams.get('descriptionVideo');
             const tagsVideo = urlParams.get('tagsVideo');
+            const rutaAWSvideo = urlParams.get('rutaAWSvideo');
     
             var vres = "";
             var asd = $.get(
             //"http://18.133.181.212/calculadora.php",
             "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
     
-            { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo, rutaAWS:, tags: tagsVideo},
+            { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo, rutaAWS: rutaAWSvideo, tags: tagsVideo},
             function (data) {
                 function jsonEscape(str) {
                 return str
