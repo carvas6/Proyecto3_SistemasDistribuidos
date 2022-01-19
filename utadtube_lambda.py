@@ -8,17 +8,17 @@ import os, base64, datetime, hashlib, hmac
 urlbase = "http://localhost/"
 
 # Variables de sql
-rds_host = "127.0.0.1"
+rds_host = "35.153.176.223"
 
 username = "user"
-password = ""
+password = "password"
 
 dbname = "macatubedb"
 
 # Variables de S3
-access_key = ''
-secret_key = ''
-securityToken= ''
+access_key = 'ASIAXBQ2N3L4U3K3IHLA'
+secret_key = 'a33dPzdp+MgNhQi4OnjRhuLCWMsYbD01pwPm+J2P'
+securityToken= 'FwoGZXIvYXdzEOv//////////wEaDNbgsnzMcT7piOiOmyK8AdGkFpL/AD+XtgthP6uk51CUlpJ+nWgvMXP646YdZ2aWCNVL3eL8S4mcm081nnvBe4o8TKaB24EsyMSFvicpNxclB+PxDWm6eyQV9t6T4JNTr4sqS02EQlo988QGZGEEBoTTuQEPtoW7QTGr6XE+j5aGxYuhCe1SDMjzZmbhKGxa1EjeNc9gMnrvP2kWlTCJlx+DAGJ+/cRqX1Jnf3uhSkb+n60PNjEBDUk2sBTdR59RKQgN+DcuzU7vV1T4KLCYoY8GMi0iTH4M9cY1AKEqRZjdapdB5gmv3UYEwfftU1EbT8rtrcdOUUOCjvmILZ0iZsQ='
 
 bucket = ""
 bucketUrl = ""
@@ -120,11 +120,11 @@ def comentarios(conn,videoId):
             if (row is not None):
                 for comentario in row:
                     comentarios.append({
-                        "id": comentario[0],
+                        #"id": comentario[0],
                         "usuarioId": comentario[1],
                         "nombreUsuario": comentario[2],
-                        "contenido": comentario[3],
-                        "hilo": comentariosDeComentarios(conn,comentario[0])
+                        "contenido": comentario[3]#,
+                        #"hilo": comentariosDeComentarios(conn,comentario[0])
                     })
     except pymysql.MySQLError as e:
         print(e)
@@ -462,15 +462,33 @@ def video(id):
         'body' : json.dumps(body)
     }
 
-def editarVideo(id,nombre,descripcion):
+def editarVideo(id,nombre,descripcion,tags):
     conn = connect()
     body = {}
+    tagsAInsertar = []
+    tagsAEliminar = []
+    antiguosTags = tagsDeVideo(conn,id)
+    # los tags que no esten en los nuevos pero si en los antiguos en el array de quitar
+    for t in antiguosTags:
+        if t not in tags:
+            tagsAEliminar.append(t)
+    # los tags que no esten en los antiguos pero si en los nuevos en el array de añadirTags
+    for t in tags:
+        if t not in antiguosTags:
+            tagsAInsertar.append(t)
+
     try:
         with conn.cursor() as cur:
             cur.execute("update Video set nombre='"+nombre+"', descripcion='"+descripcion+"' where id="+id)
             conn.commit()
             if (cur.fetchone() == 1):
                 body["redirectPage"] = urlbase+"video.html"
+            for t in tagsAInsertar:
+                cur.execute("insert into Video_Tags values("+str(id)+","+t+")")
+            conn.commit()
+            for t in tagsAEliminar:
+                cur.execute("delete from Video_Tags where videoId="+str(id)+" and tag="+t)
+            conn.commit()
     except pymysql.MySQLError as e:
         print(e)
         body["redirectPage"] = urlbase+"error.html"
@@ -583,7 +601,7 @@ def lambda_handler(event , context):
         cambiarContrasenya(id,nuevaContrasenya)
     if op == "buscarVideos":
         busqueda = event["queryStringParameters"]["busqueda"]
-        tags = json.loads(event["queryStringParameters"]["tags"])
+        tags = event["queryStringParameters"]["tags"].split()
         limit = event["queryStringParameters"]["limit"]
         return buscarVideos(busqueda,tags,limit)
     if op == "misvideos":
@@ -597,7 +615,7 @@ def lambda_handler(event , context):
         rutaAWS = event["queryStringParameters"]["rutaAWS"]
         nombre = event["queryStringParameters"]["nombre"]
         descripcion = event["queryStringParameters"]["descripcion"]
-        tags = json.loads(event["queryStringParameters"]["tags"])
+        tags = event["queryStringParameters"]["tags"].split()
         return nuevoVideo(usuarioId,tamanyo,rutaAWS,nombre,descripcion,tags)
     if op == "video":
         id = event["queryStringParameters"]["id"]
@@ -606,7 +624,8 @@ def lambda_handler(event , context):
         id = event["queryStringParameters"]["videoId"]
         nombre = event["queryStringParameters"]["nombre"]
         descripcion = event["queryStringParameters"]["descripcion"]
-        editarVideo(id,nombre,descripcion)
+        tags = event["queryStringParameters"]["tags"]
+        editarVideo(id,nombre,descripcion,tags)
     if op == "comentar":
         usuarioId = event["queryStringParameters"]["usuarioId"]
         videoId = event["queryStringParameters"]["videoId"]
