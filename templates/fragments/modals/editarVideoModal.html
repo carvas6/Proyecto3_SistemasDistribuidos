@@ -1,7 +1,121 @@
-<div class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-      <!-- Any other Bulma elements you want -->
-    </div>
-    <button class="modal-close is-large" aria-label="close"></button>
+<div class="modal" id="modalEditarVideo">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <section class="modal-card-body hero is-primary">
+      <h1 class="title is-primary has-text-centered mt-6">Subir Video</h1>
+      <div class="hero-body">
+          <div class="container">
+              <div class="columns is-centered">
+                  <div class="column">
+                              <div class="box has-background-light">
+
+                                <div class="field">
+                                  <label class="label" for="videoName">Nombre Video</label>
+                                  <div class="control">
+                                      <input id="videoNameEdit"
+                                          type="text"
+                                          class="input"
+                                          placeholder="Nuevo Nombre Video"/>
+                                        <span id="errorNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no puede contener '#' ni '@'--></span>
+                                  </div>
+                              </div>
+
+                                  <div class="field">
+                                    <label class="label" for="descriptionVideo">Descripción Video</label>
+                                    <div class="control">
+                                        <input id="descriptionVideoEdit"
+                                            type="text"
+                                            class="input"
+                                            placeholder="Nueva Descripción Video"/>
+                                    </div>
+                                </div>
+                                  
+                                  <div class="field">
+                                      <label class="label" for="tagsVideo">Tags</label>
+                                      <div class="control">
+                                          <input id="tagsVideoEdit"
+                                              type="text"
+                                              class="input"
+                                              placeholder="Introduce tags separados por un espacio (serán los nuevos tags del video)"/>
+                                        <span id="errorTagsNameVideoUpload" style="color:red;"><!--Mensaje de error nombre de video no puede contener '#' ni '@'--></span>
+                                      </div>
+                                  </div>
+                              </div>
+
+                              <input type="hidden" id="editVideoId">
+
+                          <button class="button is-link" id="editVideoButton">Editar Video
+                          </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+  </div>
+  <button class="modal-close is-large" aria-label="close" onclick="$('#modalEditarVideo').removeClass('is-active')"></button>
 </div>
+<script>
+  $(document).ready(function () {
+
+    function tiene_letras(texto){
+      texto = texto.toLowerCase();
+      for(i=0; i<texto.length; i++){
+          if (letras.indexOf(texto.charAt(i),0)!=-1){
+            return 1;
+          }
+      }
+      return 0;
+    }
+
+    $("#editVideoButton").click(function () {
+      var nombreVideo = document.getElementById("videoNameEdit").value;
+      var tagsVideo = document.getElementById("tagsVideoEdit").value;
+      var descriptionVideo = document.getElementById("descriptionVideoEdit").value;
+
+      if(tiene_letras(nombreVideo) == 1){
+        nombreVideo.setCustomValidity("Nombre de video no puede contener '#' ni '@'");
+      }else if(tiene_letras(tagsVideo) == 1){
+        tagsVideo.setCustomValidity("Tags de video no puede contener '#' ni '@'");
+      }
+      else{
+        var vres = "";
+        var asd = $.get(
+        //"http://18.133.181.212/calculadora.php",
+        "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+
+        { op: "editarVideo", videoId: , nombre: nombreVideo, descripcion: descriptionVideo, tags: tagsVideo},
+        function (data) {
+            function jsonEscape(str) {
+            return str
+                .replace(/\n/g, "\\\\n")
+                .replace(/\r/g, "\\\\r")
+                .replace(/\t/g, "\\\\t");
+            }
+
+            //descomentar esta línea si se usa PHP :
+            //var json=JSON.parse(data);
+            //descomentar esta línea si se usa lambda-apigateway : var json=data;
+            var json = data;
+            alert("page content: " + JSON.stringify(json));
+            document.getElementById("res").innerHTML =
+            "Resultado recibido:" + json.res;
+        }
+        )
+        .done(function () {
+            $('#modalUploadVideo').removeClass('is-active');
+            swal('','Video editado correctamente', 'success');
+            window.location.replace(json.redirect);
+        })
+        .fail(function () {
+            swal('','Error editando el video', 'error');
+            window.location.replace(json.redirect);
+        });
+
+        asd.always(function () {
+        //alert("second finished");
+        });
+      }
+        
+    });
+  });
+</script>

@@ -47,7 +47,7 @@
     var nombreUsuario = document.getElementById("nombreUsuario").value;
     var descriptionVideo = document.getElementById("descriptionVideo").value;
     
-    var redirect = document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo;
+    var redirect = document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario;
   }
   
   </script>
@@ -74,7 +74,7 @@
                                   </div>
 
                                   <div class="field">
-                                    <label class="label" for="imageArchive">Video</label>
+                                    <label class="label" for="imageArchive">Preview Image</label>
                                     <div class="control">
                                         <input id="imageArchive"
                                             type="file"
@@ -101,7 +101,7 @@
                                         <input id="descriptionVideo"
                                             type="text"
                                             class="input"
-                                            placeholder="Nombre Video"/>
+                                            placeholder="Descripción Video"/>
                                     </div>
                                 </div>
                                   

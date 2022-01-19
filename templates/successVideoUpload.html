@@ -14,10 +14,15 @@
 
         <p class="text-center">VIDEO SUBIDO A S3 CORRECTAMENTE</p>
 
+        <div class="modalUploadVideo"></div>
+
     <script>
         $(document).ready(function () {
             $('.head').load('fragments/header.html');
             $('.navbar').load('fragments/navbar.html');
+            $('.modalUploadVideo').load('fragments/modals/modalUploadVideo.html');
+            $('#modalUploadVideo').removeClass('is-active');
+
 
             const urlParams = new URLSearchParams(window.location.search);
 
@@ -57,6 +62,7 @@
             })
             .fail(function () {
                 swal('','Error guardando el video en la BBDD', 'error');
+                window.location.replace(json.redirect);
             });
     
             asd.always(function () {
