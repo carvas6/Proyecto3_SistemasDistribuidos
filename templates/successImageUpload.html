@@ -30,7 +30,7 @@
             //"http://18.133.181.212/calculadora.php",
             "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
     
-            { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo, rutaAWS:, tags: tagsVideo},
+            { op: "insertarMiniatura", videoId: idVideo, rutaAWS: rutaAwsImagen},
             function (data) {
                 function jsonEscape(str) {
                 return str
@@ -50,19 +50,18 @@
             )
             .done(function () {
                 $('#modalUploadVideo').removeClass('is-active');
-                swal('','Video guardado correctamente en la BBDD', 'success');
-                getAWSKeys();
+                swal('','Imagen guardada correctamente en la BBDD', 'success');
             })
             .fail(function () {
-                swal('','Error guardando el video en la BBDD', 'error');
+                swal('','Error guardando la imagen en la BBDD', 'error');
+                
+            });
+
+            asd.always(function () {
                 var loggedUsername = document.getElementById('nombreUsuario');
                 var loggedUserId = document.getElementById('idUsuario');
 
                 window.location.replace("/inicio.html?loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
-            });
-    
-            asd.always(function () {
-            //alert("second finished");
             });
         });
     </script>
