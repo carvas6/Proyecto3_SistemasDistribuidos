@@ -21,6 +21,13 @@
   
   function setKeyFilename() {
     document.getElementById("key").value = document.getElementById("file").value.substring(document.getElementById("file").value.lastIndexOf('\\')+1);	
+    
+    var idUsuario = document.getElementById("idUsuario").value;
+    var nombreUsuario = document.getElementById("nombreUsuario").value;
+    var nombreVideo = document.getElementById("videoName").value;
+    var descriptionVideo = document.getElementById("descriptionVideo").value;
+    
+    var redirect = document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo;
   }
   
   </script>
@@ -95,7 +102,7 @@
                               <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
                               <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
                               <input type="hidden" name="acl" value="public-read" />
-                              <input type="hidden" name="success_action_redirect" value="http://pruebauploadutad.s3-website-us-east-1.amazonaws.com/success.html" />
+                              <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="http://pruebauploadutad.s3-website-us-east-1.amazonaws.com/successVideoUpload.html" />
                               <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
                               <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
 
@@ -113,52 +120,5 @@
 <script>
     $(document).ready(function () {
       getAWSKeys();
-      $("#uploadVideoButton").click(function () {
-        var idUsuario = document.getElementById("idUsuario").value;
-        var nombreUsuario = document.getElementById("nombreUsuario").value;
-        var nombreVideo = document.getElementById("videoName").value;
-        var descriptionVideo = document.getElementById("descriptionVideo").value;
-  
-        var vres = "";
-        var asd = $.get(
-          //"http://18.133.181.212/calculadora.php",
-          "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
-  
-          { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo},
-          function (data) {
-            function jsonEscape(str) {
-              return str
-                .replace(/\n/g, "\\\\n")
-                .replace(/\r/g, "\\\\r")
-                .replace(/\t/g, "\\\\t");
-            }
-  
-            //descomentar esta línea si se usa PHP :
-            //var json=JSON.parse(data);
-            //descomentar esta línea si se usa lambda-apigateway : var json=data;
-            var json = data;
-            alert("page content: " + JSON.stringify(json));
-            document.getElementById("res").innerHTML =
-              "Resultado recibido:" + json.res;
-            //window.location.replace(json.redirect);
-          }
-        )
-          .done(function () {
-            if(json.video==false){
-              document.getElementById('videoArchive').innerText="Formato de archivo no válido";
-            }
-            else{
-              $('#modalUploadVideo').removeClass('is-active');
-              //swal video subido correctamente
-            }
-          })
-          .fail(function () {
-            alert("error subiendo el video");
-          });
-  
-        asd.always(function () {
-          //alert("second finished");
-        });
-      });
     });
   </script>
