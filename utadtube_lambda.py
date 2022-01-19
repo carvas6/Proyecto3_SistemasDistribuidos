@@ -42,6 +42,8 @@ policy = """{"expiration": "2020-12-30T12:00:00.000Z",
   ]
 }"""
 
+# FUNCIONES AUXILIARES
+
 def connect():
     try:
         return pymysql.connect(host=rds_host, user=username, password=password, database=dbname, connect_timeout=10, port=3306)
@@ -60,6 +62,74 @@ def tagsDeVideo(conn,videoId):
     except pymysql.MySQLError as e:
         print(e)
     return tags
+
+def votosNegativos(conn,videoId):
+    suma = 0
+    try:
+        with conn.cursor() as cur:
+            cur.execute("select count(valor) from Voto where videoId = "+str(videoId)+" and valor=-1")
+            row = cur.fetchone()
+            if (row is not None):
+                suma = abs(int(row[0]))
+    except pymysql.MySQLError as e:
+        print(e)
+    return suma
+
+def votosPositivos(conn,videoId):
+    suma = 0
+    try:
+        with conn.cursor() as cur:
+            cur.execute("select count(valor) from Voto where videoId = "+str(videoId)+" and valor=1")
+            row = cur.fetchone()
+            if (row is not None):
+                suma = int(row[0])
+    except pymysql.MySQLError as e:
+        print(e)
+    return suma
+
+def comentariosDeComentarios(conn,comentarioPadreId):
+    comentarios = []
+    try:
+        with conn.cursor() as cur:
+            cur.execute("select c.id, u.id, u.nombreUsuario, c.contenido "+
+                        "from Comentario c join Usuario u on c.usuarioId = u.id "+
+                        "where comentarioPadreId="+str(comentarioPadreId))
+            conn.commit()
+            row = cur.fetchall()
+            if (row is not None):
+                for comentario in row:
+                    comentarios.append({
+                        "id": comentario[0],
+                        "usuarioId": comentario[1],
+                        "nombreUsuario": comentario[2],
+                        "contenido": comentario[3]
+                    })
+    except pymysql.MySQLError as e:
+        print(e)
+    return comentarios
+
+def comentarios(conn,videoId):
+    comentarios = []
+    try:
+        with conn.cursor() as cur:
+            cur.execute("select c.id, u.id, u.nombreUsuario, c.contenido "+
+                        "from Comentario c join Usuario u on c.usuarioId = u.id "+
+                        "where videoId="+str(videoId)+" and comentarioPadreId is null")
+            conn.commit()
+            row = cur.fetchall()
+            if (row is not None):
+                for comentario in row:
+                    comentarios.append({
+                        "id": comentario[0],
+                        "usuarioId": comentario[1],
+                        "nombreUsuario": comentario[2],
+                        "contenido": comentario[3],
+                        "hilo": comentariosDeComentarios(conn,comentario[0])
+                    })
+    except pymysql.MySQLError as e:
+        print(e)
+    return comentarios
+
 
 # FUNCIONES DE inicio.html
 
@@ -102,7 +172,7 @@ def login(user,password):
     body = {}
     try:
         with conn.cursor() as cur:
-            cur.execute("select id,nombreUsuario from Usuario where (email='"+user+"' or nombreUsuario='"+user+"') and contrasenya='"+password+"'")
+            cur.execute("select id,nombreUsuario from Usuario where (email=%s or nombreUsuario=%s) and contrasenya=%s",(user,user,password))
             conn.commit()
             row = cur.fetchone()
             if row is not None:
@@ -131,13 +201,13 @@ def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion
             cur.execute("select 1 from Usuario where nombreUsuario='"+nombreUsuario+"'")
             conn.commit()
             ok = 0
-            if cur.fetchone is None:
+            if cur.fetchone() is not None:
                 ok += 1
                 body["nombreUsuario"] = False
             else:
                 body["nombreUsuario"] = True
             cur.execute("select 1 from Usuario where email='"+email+"'")
-            if cur.fetchone() is None:
+            if cur.fetchone() is not None:
                 ok += 1
                 body["email"] = False
             else:
@@ -146,10 +216,46 @@ def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion
             if ok == 0:
                 cur.execute("insert into Usuario(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion) values('"+nombreUsuario+"','"+nombreCompleto+"','"+email+"','"+contrasenya+"','"+fraseRecuperacion+"')")
                 conn.commit()
-                cur.execute("select id from Usuario where nombreUsuario='"+nombreUsuario+"'")
+                cur.execute("select id from Usuario where nombreUsuario=%s",nombreUsuario)
                 conn.commit()
                 body["id"] = cur.fetchone()[0]
                 body["redirectPage"] = urlbase+"misvideos.html"
+
+    except pymysql.MySQLError as e:
+        print(e)
+        body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
+    return {
+        'statusCode': 200,
+        'headers': { 'Access-Control-Allow-Origin' : '*' },
+        'body' : json.dumps(body)
+    }
+
+def recuperarContrasenya(user,nuevaContrasenya,fraseRecuperacion):
+    conn = connect()
+    body = {}
+    try:
+        with conn.cursor() as cur:
+            cur.execute("select id,fraseRecuperacion from Usuario "+
+                        "where nombreUsuario='"+user+"' or email='"+user+"'")
+            conn.commit()
+            row = cur.fetchone()
+            if row is not None:
+                body["usuario"] = True
+                if fraseRecuperacion.casefold() == row[1].casefold():
+                    cur.execute("update Usuario set contrasenya="+nuevaContrasenya+" where id="+str(row[0]))
+                    conn.commit()
+                    body["fraseRecuperacion"] = True
+                    body["id"] = row[0]
+                    body["redirectPage"] = urlbase+"misvideos.html"
+                else:
+                    body["fraseRecuperacion"] = False
+            else:
+                body["usuario"] = False
 
     except pymysql.MySQLError as e:
         print(e)
@@ -230,7 +336,7 @@ def misVideos(usuarioId):
                     {
                         "id": video[0],
                         "nombre": video[0],
-                        "fechaSubida": video[3],
+                        "fechaSubida": video[3].strftime("%m/%d/%Y, %H:%M:%S"),
                         "tags": tagsDeVideo(conn,video[0])
                     }
                 )
@@ -302,9 +408,9 @@ def video(id):
     body = {}
     try:
         with conn.cursor() as cur:
-            cur.execute("select u.id,v.nombre,u.nombre,v.descripcion,v.tamanyo,v.rutaAWS,v.fechaSubida,v.ultimaModificacion "+
+            cur.execute("select u.id,v.nombre,u.nombreUsuario,v.descripcion,v.tamanyo,v.rutaAWS,v.fechaSubida,v.ultimaModificacion "+
                         "from Video v join Usuario u on u.id = v.usuarioId "+
-                        "where v.id = "+id)
+                        "where v.id = "+str(id))
             conn.commit()
             row = cur.fetchone()
             body["video"] = {
@@ -314,9 +420,12 @@ def video(id):
                 "descripcion": row[3],
                 "tamanyo": row[4],
                 "rutaAWS": row[5],
-                "fechaSubida": row[6],
-                "ultimaModificacion": row[7],
-                "tags": tagsDeVideo(conn,id)
+                "fechaSubida": row[6].strftime("%m/%d/%Y, %H:%M:%S"),
+                "ultimaModificacion": row[7].strftime("%m/%d/%Y, %H:%M:%S"),
+                "tags": tagsDeVideo(conn,id),
+                "votosPositivos": votosPositivos(conn,id),
+                "votosNegativos": votosNegativos(conn,id),
+                "comentarios": comentarios(conn,id)
             }
     except pymysql.MySQLError as e:
         print(e)
@@ -361,9 +470,9 @@ def comentar(usuarioId,videoId,contenido,comentarioPadreId):
     try:
         with conn.cursor() as cur:
             if comentarioPadreId != -1:
-                cur.execute("insert into Comentario(usuarioId,videoId,contenido,comentarioPadreId) values("+usuarioId+","+videoId+",'"+contenido+"',"+comentarioPadreId+")")
+                cur.execute("insert into Comentario(usuarioId,videoId,contenido,comentarioPadreId) values("+str(usuarioId)+","+str(videoId)+",'"+contenido+"',"+str(comentarioPadreId)+")")
             else:
-                cur.execute("insert into Comentario(usuarioId,videoId,contenido) values("+usuarioId+","+videoId+",'"+contenido+"')")
+                cur.execute("insert into Comentario(usuarioId,videoId,contenido) values("+str(usuarioId)+","+str(videoId)+",'"+contenido+"')")
             conn.commit()
             cur.execute("select id from Comentario order by id desc limit 1")
             conn.commit()
@@ -383,6 +492,37 @@ def comentar(usuarioId,videoId,contenido,comentarioPadreId):
         'headers': { 'Access-Control-Allow-Origin' : '*' },
         'body' : json.dumps(body)
     }
+
+def votar(usuarioId,videoId,valor):
+    conn = connect()
+    body = {}
+    try:
+        with conn.cursor() as cur:
+            cur.execute("select 1 from Voto where usuarioId="+str(usuarioId)+" and videoId="+str(videoId))
+            conn.commit()
+            if (cur.fetchone() is None):
+                cur.execute("insert into Voto(usuarioId,videoId,valor) values("+str(usuarioId)+","+str(videoId)+","+str(valor)+")")
+                conn.commit()
+                cur.execute("select id from Voto order by id desc limit 1")
+                conn.commit()
+                row = cur.fetchone()
+                if (row is not None):
+                    body["id"] = row[0]
+    except pymysql.MySQLError as e:
+        print(e)
+        body["redirectPage"] = urlbase+"error.html"
+        return {
+            'statusCode': 500,
+            'headers': { 'Access-Control-Allow-Origin' : '*' },
+            'body' : json.dumps(body)
+        }
+    return {
+        'statusCode': 200,
+        'headers': { 'Access-Control-Allow-Origin' : '*' },
+        'body' : json.dumps(body)
+    }
+
+#-------------------------------------
 
 def sign(key, msg):
     return hmac.new(key, msg.encode('utf-8'), hashlib.sha256).digest()
