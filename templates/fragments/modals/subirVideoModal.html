@@ -1,3 +1,29 @@
+<script>
+
+  function getAWSKeys() {
+    var asd=$.get(
+         "http://3.237.76.160/keys_gateway.php",
+          {},
+          function(data) {
+  
+             var json=JSON.parse(data);
+                         json=JSON.parse(json);
+             document.getElementById("Policy").value = json.stringToSign;
+             document.getElementById("X-Amz-Credential").value = json.xAmzCredential;		
+             document.getElementById("X-Amz-Date").value = json.amzDate;		
+             document.getElementById("X-Amz-Signature").value = json.stringSigned;	
+             document.getElementById("X-Amz-Security-Token").value = json.securityToken;	
+        
+          }
+      )
+    
+  }
+  
+  function setKeyFilename() {
+    document.getElementById("key").value = document.getElementById("file").value.substring(document.getElementById("file").value.lastIndexOf('\\')+1);	
+  }
+  
+  </script>
 <div class="modal" id="modalUploadVideo">
   <div class="modal-background"></div>
   <div class="modal-card">
@@ -7,6 +33,7 @@
           <div class="container">
               <div class="columns is-centered">
                   <div class="column">
+                    <form action="http://pruebauploadutad.s3.us-east-1.amazonaws.com/" onsubmit="setKeyFilename()" method="post" enctype="multipart/form-data">
                               <div class="box has-background-light">
                                   <div class="field">
                                       <label class="label" for="videoArchive">Video</label>
@@ -18,6 +45,17 @@
                                               <span id="errorTypeVideoUpload" style="color:red;"><!--Mensaje de error tipo de archivo no válido--></span>
                                       </div>
                                   </div>
+
+                                  <div class="field">
+                                    <label class="label" for="imageArchive">Video</label>
+                                    <div class="control">
+                                        <input id="imageArchive"
+                                            type="file"
+                                            class="input"
+                                            placeholder="Sube aqui tu archivo de video" required/>
+                                            <span id="errorTypeImageUpload" style="color:red;"><!--Mensaje de error tipo de archivo no válido--></span>
+                                    </div>
+                                </div>
 
                                   <div class="field">
                                       <label class="label" for="videoName">Nombre Video</label>
@@ -51,9 +89,19 @@
                                       </div>
                                   </div>
                               </div>
+                              <input type="hidden"  id="X-Amz-Credential" name="X-Amz-Credential" value="" />
+                              <input type="hidden"  id="X-Amz-Date" name="X-Amz-Date" value="" />
+                              <input type="hidden"  id="Policy" name="Policy" value="" />
+                              <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
+                              <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
+                              <input type="hidden" name="acl" value="public-read" />
+                              <input type="hidden" name="success_action_redirect" value="http://pruebauploadutad.s3-website-us-east-1.amazonaws.com/success.html" />
+                              <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
+                              <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
 
-                          <button class="button is-link" id="uploadVideoButton">Subir Video
+                          <button class="button is-link" type="submit" id="uploadVideoButton">Subir Video
                           </button>
+                        </form>
                   </div>
               </div>
           </div>
@@ -64,6 +112,7 @@
 </div>
 <script>
     $(document).ready(function () {
+      getAWSKeys();
       $("#uploadVideoButton").click(function () {
         var idUsuario = document.getElementById("idUsuario").value;
         var nombreUsuario = document.getElementById("nombreUsuario").value;
