@@ -122,8 +122,8 @@
                     $("#buscarVideo").submit(function () {
                         var busqueda = document.getElementById("busqueda").value;
 
-                        var loggedUsername = document.getElementById('nombreUsuario');
-                        var loggedUserId = document.getElementById('idUsuario');
+                        var loggedUsername = document.getElementById('nombreUsuario').value;
+                        var loggedUserId = document.getElementById('idUsuario').value;
 
                         window.location.replace("/inicio.html?loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId + "&busqueda=" + busqueda);
                     });

@@ -44,8 +44,8 @@
                 //descomentar esta línea si se usa lambda-apigateway : var json=data;
                 var json = data;
                 alert("page content: " + JSON.stringify(json));
-                document.getElementById("res").innerHTML =
-                "Resultado recibido:" + json.res;
+                //document.getElementById("res").innerHTML =
+                //"Resultado recibido:" + json.res;
             }
             )
             .done(function () {
@@ -56,8 +56,8 @@
             });
 
             asd.always(function () {
-                var loggedUsername = document.getElementById('nombreUsuario');
-                var loggedUserId = document.getElementById('idUsuario');
+                var loggedUsername = document.getElementById('nombreUsuario').value;
+                var loggedUserId = document.getElementById('idUsuario').value;
 
                 window.location.replace("/inicio.html?loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
             });

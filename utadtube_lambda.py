@@ -5,7 +5,7 @@ import pymysql
 import json
 import os, base64, datetime, hashlib, hmac
 
-urlbase = "http://localhost/"
+urlbase = "https://utadtube.s3.amazonaws.com/htmls/"
 
 # Variables de sql
 rds_host = "54.198.117.205"
@@ -20,8 +20,8 @@ access_key = 'ASIAXBQ2N3L4U3K3IHLA'
 secret_key = 'a33dPzdp+MgNhQi4OnjRhuLCWMsYbD01pwPm+J2P'
 securityToken= 'FwoGZXIvYXdzEOv//////////wEaDNbgsnzMcT7piOiOmyK8AdGkFpL/AD+XtgthP6uk51CUlpJ+nWgvMXP646YdZ2aWCNVL3eL8S4mcm081nnvBe4o8TKaB24EsyMSFvicpNxclB+PxDWm6eyQV9t6T4JNTr4sqS02EQlo988QGZGEEBoTTuQEPtoW7QTGr6XE+j5aGxYuhCe1SDMjzZmbhKGxa1EjeNc9gMnrvP2kWlTCJlx+DAGJ+/cRqX1Jnf3uhSkb+n60PNjEBDUk2sBTdR59RKQgN+DcuzU7vV1T4KLCYoY8GMi0iTH4M9cY1AKEqRZjdapdB5gmv3UYEwfftU1EbT8rtrcdOUUOCjvmILZ0iZsQ='
 
-bucket = ""
-bucketUrl = ""
+bucket = "utadtube"
+bucketUrl = "https://utadtube.s3.amazonaws.com/users/"
 region = 'us-east-1'
 service = 's3'
 
@@ -34,7 +34,7 @@ policy = """{"expiration": "2020-12-30T12:00:00.000Z",
 {"bucket": \"""" + bucket +"""\"},
 ["starts-with", "$key", ""],
 {"acl": "public-read"},
-{"success_action_redirect": \""""+ bucketUrl+"""success.html"},
+{"success_action_redirect": \""""+ urlbase+"""successVideoUpload.html"},
     {"x-amz-credential": \""""+ access_key+"/"+dateStamp+"/"+region+"""/s3/aws4_request"},
     {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
     {"x-amz-date": \""""+amzDate+"""\" },

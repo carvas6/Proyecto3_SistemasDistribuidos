@@ -32,8 +32,14 @@
               document.getElementById("key").value = document.getElementById("imageArchive").value.substring(document.getElementById("imageArchive").value.lastIndexOf('\\')+1);	
               
               var idVideo = document.getElementById("idVideo").value;
+
+              var videoArchive = document.getElementById("imageArchive").value;
+              imageArchive.lastModifiedDate = new Date();
+              imageArchive.name = imageArchive.lastModifiedDate + document.getElementById("key").value;
+
+              var rutaAWS = "https://utadtube.s3.amazonaws.com/users/" + nombreUsuario + "/" + imageArchive.name;
               
-              document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + document.getElementById("X-Amz-Signature").value;
+              document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + rutaAWS;
             }
             
         </script>
@@ -46,7 +52,7 @@
 
         <p class="text-center">VIDEO SUBIDO A S3 CORRECTAMENTE</p>
 
-        <form action="http://pruebauploadutad.s3.us-east-1.amazonaws.com/" onsubmit="setKeyFilename()" method="post" enctype="multipart/form-data"></form>
+        <form action="https://utadtube.s3.amazonaws.com/users/" onsubmit="setKeyFilename()" id="formUploadImage" method="post" enctype="multipart/form-data"></form>
             <div class="field">
                 <label class="label" for="imageArchive">Preview Image</label>
                 <div class="control">
@@ -111,19 +117,22 @@
                 //descomentar esta línea si se usa lambda-apigateway : var json=data;
                 var json = data;
                 alert("page content: " + JSON.stringify(json));
-                document.getElementById("res").innerHTML =
-                "Resultado recibido:" + json.res;
+                //document.getElementById("res").innerHTML =
+                //"Resultado recibido:" + json.res;
             }
             )
             .done(function () {
                 $('#modalUploadVideo').removeClass('is-active');
                 swal('','Video guardado correctamente en la BBDD', 'success');
                 getAWSKeys();
+
+                var loggedUser = document.getElementById('nombreUsuario').value;
+                document.getElementById('formUploadImage').action = "https://utadtube.s3.amazonaws.com/users/" + loggedUser + "/";
             })
             .fail(function () {
                 swal('','Error guardando el video en la BBDD', 'error');
-                var loggedUsername = document.getElementById('nombreUsuario');
-                var loggedUserId = document.getElementById('idUsuario');
+                var loggedUsername = document.getElementById('nombreUsuario').value;
+                var loggedUserId = document.getElementById('idUsuario').value;
 
                 window.location.replace("/inicio.html?loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
             });
