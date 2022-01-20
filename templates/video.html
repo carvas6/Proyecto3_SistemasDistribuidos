@@ -21,8 +21,14 @@
                 <div style="display:flex;justify-content: space-between;">
                     <p id="fechaSubida">Fecha de subida</p>
                     <p id="fechaModificacion">fecha Modificacion</p>
-                    <p>Votos</p>
+                    <p id="likes">Likes</p>
+                    <p id="dislikes">DisLikes</p>
                 </div>
+                <div style="display:flex;justify-content: space-between;">
+                    <a id="likeButton" onclick="likeVideo()">Me gusta el video <i class="fas fa-thumbs-up" style="color:blue;"></i></a>
+                    <a id="dislikeButton"  onclick="dislikeVideo()">No me gusta el video <i class="fas fa-thumbs-down" style="color:red;"></i></a>
+                </div>
+                <hr>
                 <hr>
                 <a href="" id="usuarioVideoLink" class="Link-large"><h2 class="subtitle" id="usuarioVideo">Nombre de usuario</h2></a>
                 <br>
@@ -155,13 +161,19 @@
                         tituloVideo.innerText = json.video.nombreVideo;
 
                         var fechaSubida = document.getElementById('fechaSubida');
-                        fechaSubida.innerText = json.video.fechaSubida;
+                        fechaSubida.innerText = "Fecha subida " + json.video.fechaSubida;
 
                         var fechaModificacion = document.getElementById('fechaModificacion');
-                        fechaModificacion.innerText = json.video.ultimaModificacion;
+                        fechaModificacion.innerText = "Fecha última Modificación " + json.video.ultimaModificacion;
 
                         var usuarioVideo = document.getElementById('usuarioVideo');
                         usuarioVideo.innerText = json.video.nombreUsuario;
+                        
+                        var likesVideo = document.getElementById('likes');
+                        likesVideo.innerText = "Likes: " + json.video.votosPositivos;
+
+                        var dislikesVideo = document.getElementById('dislikes');
+                        dislikesVideo.innerText = "Dislikes: " + json.video.votosNegativos;
 
                         var usuarioVideoLink = document.getElementById('usuarioVideoLink');
 
