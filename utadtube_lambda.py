@@ -179,6 +179,8 @@ def login(user,password):
                 body["id"] = row[0]
                 body["nombreUsuario"] = row[1]
                 body["redirectPage"] = urlbase+"profile.html"
+            else:
+                body["id"] = 0
     except pymysql.MySQLError as e:
         print(e)
         body["redirectPage"] = urlbase+"error.html"
