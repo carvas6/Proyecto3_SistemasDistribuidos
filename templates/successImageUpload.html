@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <div class="head"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <title>UtadTube Success S3</title>
+    </head>
+    <body>
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+        </nav>
+
+        <input type="hidden" id="idUsuario"><!--idUsuario-->
+        <input type="hidden" id="nombreUsuario"><!--nombreUsuario-->
+
+        <p class="text-center">IMAGEN SUBIDA A S3 CORRECTAMENTE</p>
+
+    <script>
+        $(document).ready(function () {
+            $('.head').load('fragments/header.html');
+            $('.navbar').load('fragments/navbar.html');
+
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const idVideo = urlParams.get('idVideo');
+            const rutaAwsImagen = urlParams.get('rutaAwsImagen');
+    
+            var vres = "";
+            var asd = $.get(
+            //"http://18.133.181.212/calculadora.php",
+            "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+    
+            { op: "insertarMiniatura", videoId: idVideo, rutaAWS: rutaAwsImagen},
+            function (data) {
+                function jsonEscape(str) {
+                return str
+                    .replace(/\n/g, "\\\\n")
+                    .replace(/\r/g, "\\\\r")
+                    .replace(/\t/g, "\\\\t");
+                }
+    
+                //descomentar esta línea si se usa PHP :
+                //var json=JSON.parse(data);
+                //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                var json = data;
+                alert("page content: " + JSON.stringify(json));
+                document.getElementById("res").innerHTML =
+                "Resultado recibido:" + json.res;
+            }
+            )
+            .done(function () {
+                swal('','Imagen guardada correctamente en la BBDD', 'success');
+            })
+            .fail(function () {
+                swal('','Error guardando la imagen en la BBDD', 'error'); 
+            });
+
+            asd.always(function () {
+                var loggedUsername = document.getElementById('nombreUsuario');
+                var loggedUserId = document.getElementById('idUsuario');
+
+                window.location.replace("/inicio.html?loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
+            });
+        });
+    </script>
+    </body>
+</html>

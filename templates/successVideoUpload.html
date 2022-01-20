@@ -3,9 +3,41 @@
     <head>
         <div class="head"></div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <title>UtadTube Inicio</title>
+        <title>UtadTube Success S3</title>
     </head>
     <body>
+        <script>
+
+            function getAWSKeys() {
+              var asd=$.get(
+                   "http://3.237.76.160/keys_gateway.php",
+                    {op: "subir"},
+                    function(data) {
+            
+                       var json=data;
+                       //json=JSON.parse(json);
+                       document.getElementById("Policy").value = json.stringToSign;
+                       document.getElementById("X-Amz-Credential").value = json.xAmzCredential;		
+                       document.getElementById("X-Amz-Date").value = json.amzDate;		
+                       document.getElementById("X-Amz-Signature").value = json.stringSigned;	
+                       document.getElementById("X-Amz-Security-Token").value = json.securityToken;	
+                  
+                    }
+                )
+              
+            }
+            
+            function setKeyFilename() {
+    
+              document.getElementById("key").value = document.getElementById("imageArchive").value.substring(document.getElementById("imageArchive").value.lastIndexOf('\\')+1);	
+              
+              var idVideo = document.getElementById("idVideo").value;
+              
+              document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + document.getElementById("X-Amz-Signature").value;
+            }
+            
+        </script>
+
         <nav class="navbar" role="navigation" aria-label="main navigation">
         </nav>
 
@@ -13,6 +45,33 @@
         <input type="hidden" id="nombreUsuario"><!--nombreUsuario-->
 
         <p class="text-center">VIDEO SUBIDO A S3 CORRECTAMENTE</p>
+
+        <form action="http://pruebauploadutad.s3.us-east-1.amazonaws.com/" onsubmit="setKeyFilename()" method="post" enctype="multipart/form-data"></form>
+            <div class="field">
+                <label class="label" for="imageArchive">Preview Image</label>
+                <div class="control">
+                    <input id="imageArchive"
+                        type="file"
+                        class="input"
+                        placeholder="Sube aqui tu archivo de imagen preliminar al video, si no subes una imagen se mostrara una por defecto" required/>
+                        <span id="errorTypeImageUpload" style="color:red;"><!--Mensaje de error tipo de archivo no válido--></span>
+                </div>
+            </div>
+            <input type="hidden" id="idVideo">
+
+            <input type="hidden"  id="X-Amz-Credential" name="X-Amz-Credential" value="" />
+            <input type="hidden"  id="X-Amz-Date" name="X-Amz-Date" value="" />
+            <input type="hidden"  id="Policy" name="Policy" value="" />
+            <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
+            <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
+            <input type="hidden" name="acl" value="public-read" />
+            <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="http://pruebauploadutad.s3-website-us-east-1.amazonaws.com/successImageUpload.html" />
+            <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
+            <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
+
+            <button class="button is-link" type="submit" id="uploadImageButton">Subir Imagen previa al video
+            </button>
+        </form>
 
         <div class="modalUploadVideo"></div>
 
@@ -31,13 +90,14 @@
             const nombreVideo = urlParams.get('nombreVideo');
             const descriptionVideo = urlParams.get('descriptionVideo');
             const tagsVideo = urlParams.get('tagsVideo');
+            const rutaAWSvideo = urlParams.get('rutaAWSvideo');
     
             var vres = "";
             var asd = $.get(
             //"http://18.133.181.212/calculadora.php",
             "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
     
-            { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo, rutaAWS:, tags: tagsVideo},
+            { op: "nuevoVideo", usuarioId: idUsuario, nombre: nombreVideo, descripcion: descriptionVideo, rutaAWS: rutaAWSvideo, tags: tagsVideo},
             function (data) {
                 function jsonEscape(str) {
                 return str
@@ -58,11 +118,14 @@
             .done(function () {
                 $('#modalUploadVideo').removeClass('is-active');
                 swal('','Video guardado correctamente en la BBDD', 'success');
-                window.location.replace(json.redirect);
+                getAWSKeys();
             })
             .fail(function () {
                 swal('','Error guardando el video en la BBDD', 'error');
-                window.location.replace(json.redirect);
+                var loggedUsername = document.getElementById('nombreUsuario');
+                var loggedUserId = document.getElementById('idUsuario');
+
+                window.location.replace("/inicio.html?loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
             });
     
             asd.always(function () {
