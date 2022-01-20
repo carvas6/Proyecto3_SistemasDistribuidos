@@ -46,6 +46,10 @@
                         <p>este es un comentario sobre el video</p>
                     </div>-->
                 </div>
+                <div id="comentarButton">
+                    <textarea id="contenidoComentario"></textarea>
+                    <a onclick="Comentar()" type="button" class="button is-primary">Comentar</a>
+                </div>
             </div>
             <div class="section column is-one-fifths">
                 <p>Videos relacionados</p>
@@ -60,14 +64,63 @@
         <script>
             $(document).ready(function () {
               $('.head').load('fragments/header.html');
-              
+              $('.navbar').load('fragments/navbar.html');
               $('.modalLogin').load('fragments/modals/loginModal.html');
               $('.modalRegister').load('fragments/modals/registerModal.html');
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
               $('.modalChangePassword').load('fragments/modals/changePasswordModal.html');
 
+              var loggedUsername = document.getElementById('nombreUsuario');
+              var loggedUserId = document.getElementById('idUsuario');
+
               const urlParams = new URLSearchParams(window.location.search);
               const idVideo = urlParams.get('idVideo');
+
+                if(loggedUserId==null){
+                    document.getElementById("comentarButton").style="display:none;";
+                }
+                else{
+                    document.getElementById("comentarButton").style="display:block;";
+
+                    function Comentar(){
+                        var contenido = document.getElementById('contenidoComentario');
+
+                        var vres = "";
+                        var asd = $.get(
+                            //"http://18.133.181.212/calculadora.php",
+                            "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+
+                            {op: "comentar", usuarioId: loggedUserId, videoId: idVideo, contenido: contenido},
+                            function (data) {
+                            function jsonEscape(str) {
+                                return str
+                                .replace(/\n/g, "\\\\n")
+                                .replace(/\r/g, "\\\\r")
+                                .replace(/\t/g, "\\\\t");
+                            }
+
+                            //descomentar esta línea si se usa PHP :
+                            //var json=JSON.parse(data);
+                            //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                            var json = data;
+                            alert("page content: " + JSON.stringify(json));
+                            //document.getElementById("res").innerHTML =
+                                "Resultado recibido:" + json.res;
+                            //window.location.replace(json.redirect);
+                            }
+                        )
+                            .done(function () {
+                                swal('','Comentario realizado correctamente', 'error');
+                                location.reload();
+                            })
+                            .fail(function () {
+                                swal('','Error comentando video', 'error');
+                            });
+
+                        asd.always(function () {
+                        });
+                    }
+                }
 
               var vres = "";
                 var asd = $.get(
