@@ -213,11 +213,11 @@
             }
         })
         .fail(function () {
-             alert("No ha sido posible registrar al usuario");
+             swal('','No ha sido posible registrar al usuario',error);
         });
 
         asd.always(function () {
-            alert("second finished");
+            //alert("second finished");
         });
       } 
     });
