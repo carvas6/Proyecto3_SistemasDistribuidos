@@ -24,11 +24,10 @@
                     <p id="likes">Likes</p>
                     <p id="dislikes">DisLikes</p>
                 </div>
-                <div style="display:flex;justify-content: space-between;">
-                    <a id="likeButton" onclick="likeVideo()">Me gusta el video <i class="fas fa-thumbs-up" style="color:blue;"></i></a>
-                    <a id="dislikeButton"  onclick="dislikeVideo()">No me gusta el video <i class="fas fa-thumbs-down" style="color:red;"></i></a>
+                <div style="display:flex;justify-content: space-between;" id="likeDislikeButtons">
+                    <a id="likeButton" onclick="likeVideo(1)">Me gusta el video <i class="fas fa-thumbs-up" style="color:blue;"></i></a>
+                    <a id="dislikeButton"  onclick="likeVideo(-1)">No me gusta el video <i class="fas fa-thumbs-down" style="color:red;"></i></a>
                 </div>
-                <hr>
                 <hr>
                 <a href="" id="usuarioVideoLink" class="Link-large"><h2 class="subtitle" id="usuarioVideo">Nombre de usuario</h2></a>
                 <br>
@@ -84,9 +83,54 @@
 
                 if(loggedUserId==null){
                     document.getElementById("comentarButton").style="display:none;";
+                    document.getElementById("likeDislikeButtons").style="display:none;";
                 }
                 else{
+                    document.getElementById("likeDislikeButtons").style="display:block;";
                     document.getElementById("comentarButton").style="display:block;";
+
+                    function likeVideo(valor){
+
+                        var vres = "";
+                        var asd = $.get(
+                            //"http://18.133.181.212/calculadora.php",
+                            "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+
+                            {op: "votar", usuarioId: loggedUserId, videoId: idVideo, valor: valor},
+                            function (data) {
+                            function jsonEscape(str) {
+                                return str
+                                .replace(/\n/g, "\\\\n")
+                                .replace(/\r/g, "\\\\r")
+                                .replace(/\t/g, "\\\\t");
+                            }
+
+                            //descomentar esta línea si se usa PHP :
+                            //var json=JSON.parse(data);
+                            //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                            var json = data;
+                            alert("page content: " + JSON.stringify(json));
+                            //document.getElementById("res").innerHTML =
+                                "Resultado recibido:" + json.res;
+                            //window.location.replace(json.redirect);
+                            }
+                        )
+                            .done(function () {
+                                if(json.id == null){
+                                    swal('Error votando video','Ya ha votaso con aterioridad este video, solo se permite un voto por usuario y video', 'error');
+                                }
+                                else{
+                                    swal('','Voto realizado correctamente', 'error');
+                                    location.reload();
+                                }
+                            })
+                            .fail(function () {
+                                swal('','Error votando video', 'error');
+                            });
+
+                        asd.always(function () {
+                        });
+                    }
 
                     function Comentar(){
                         var contenido = document.getElementById('contenidoComentario');
@@ -161,10 +205,10 @@
                         tituloVideo.innerText = json.video.nombreVideo;
 
                         var fechaSubida = document.getElementById('fechaSubida');
-                        fechaSubida.innerText = "Fecha subida " + json.video.fechaSubida;
+                        fechaSubida.innerText = "Fecha subida: " + json.video.fechaSubida;
 
                         var fechaModificacion = document.getElementById('fechaModificacion');
-                        fechaModificacion.innerText = "Fecha última Modificación " + json.video.ultimaModificacion;
+                        fechaModificacion.innerText = "Última Modificación: " + json.video.ultimaModificacion;
 
                         var usuarioVideo = document.getElementById('usuarioVideo');
                         usuarioVideo.innerText = json.video.nombreUsuario;
