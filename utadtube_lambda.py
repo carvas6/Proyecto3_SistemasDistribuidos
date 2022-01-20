@@ -8,7 +8,7 @@ import os, base64, datetime, hashlib, hmac
 urlbase = "https://utadtube.s3.amazonaws.com/htmls/"
 
 # Variables de sql
-rds_host = "54.198.117.205"
+rds_host = "52.23.154.30"
 
 username = "user"
 password = "password"
