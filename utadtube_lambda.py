@@ -8,7 +8,7 @@ import os, base64, datetime, hashlib, hmac
 urlbase = "http://localhost/"
 
 # Variables de sql
-rds_host = "35.153.176.223"
+rds_host = "54.198.117.205"
 
 username = "user"
 password = "password"
@@ -292,10 +292,16 @@ def cambiarContrasenya(id,nuevaContrasenya):
         'body' : json.dumps(body)
     }
 
-def buscarVideos(busqueda,tags,limit):
+def buscarVideos(usuarios,busqueda,tags,limit):
     conn = connect()
     body = {}
     tagsOpcionales = busqueda.split()
+
+    if len(usuarios) > 0:
+        condicionUsuarios = "u.nombreUsuario in "+str(usuarios)[1:-1]
+    else:
+        condicionUsuarios = "true"
+
     if busqueda != "":
         condicionBusqueda = "v.nombre like '%"+busqueda+"%'"
         condicionTagsOpcionales = "t.tag in ("+str(tagsOpcionales)[1:-1]+")"
@@ -308,13 +314,13 @@ def buscarVideos(busqueda,tags,limit):
             if len(tags) > 0:
                 cur.execute("select distinct v.id,u.id,v.nombre,u.nombreUsuario,v.fechaSubida "+
                             "from Video v join Usuario u on v.usuarioId = u.id join Video_Tags t on v.id = t.videoId "+
-                            "where ("+condicionBusqueda+" or "+condicionTagsOpcionales+") and t.tag in ("+str(tags)[1:-1]+") "+
-                            "order by v.fechaSubida desc limit "+str(limit))
+                            "where "+condicionUsuarios+" and ("+condicionBusqueda+" or "+condicionTagsOpcionales+") and t.tag in ("+str(tags)[1:-1]+") "+
+                            "order by v.fechaSubida desc")# limit "+str(limit))
             else:
                 cur.execute("select distinct v.id,u.id,v.nombre,u.nombreUsuario,v.fechaSubida "+
                             "from Video v join Usuario u on v.usuarioId = u.id join Video_Tags t on v.id = t.videoId "+
-                            "where "+condicionBusqueda+" or "+condicionTagsOpcionales+" " +
-                            "order by v.fechaSubida desc limit "+str(limit))
+                            "where "+condicionUsuarios+" and ("+condicionBusqueda+" or "+condicionTagsOpcionales+") " +
+                            "order by v.fechaSubida desc")# limit "+str(limit))
             conn.commit()
             body["videos"] = []
             for video in cur.fetchall():
@@ -500,7 +506,7 @@ def editarVideo(id,nombre,descripcion,tags):
 
     try:
         with conn.cursor() as cur:
-            cur.execute("update Video set nombre='"+nombre+"', descripcion='"+descripcion+"' where id="+id)
+            cur.execute("update Video set nombre='"+nombre+"', descripcion='"+descripcion+"',ultimaModificacion=now() where id="+id)
             conn.commit()
             if (cur.fetchone() == 1):
                 body["redirectPage"] = urlbase+"video.html"
@@ -621,10 +627,11 @@ def lambda_handler(event , context):
         nuevaContrasenya = event["queryStringParameters"]["nuevaContrasenya"]
         cambiarContrasenya(id,nuevaContrasenya)
     if op == "buscarVideos":
+        usuarios = event["queryStringParameters"]["usuarios"].split()
         busqueda = event["queryStringParameters"]["busqueda"]
         tags = event["queryStringParameters"]["tags"].split()
-        limit = event["queryStringParameters"]["limit"]
-        return buscarVideos(busqueda,tags,limit)
+        limit = 0#event["queryStringParameters"]["limit"]
+        return buscarVideos(usuarios,busqueda,tags,limit)
     if op == "misvideos":
         id = event["queryStringParameters"]["usuarioId"]
         return misVideos(id)
@@ -655,7 +662,7 @@ def lambda_handler(event , context):
         usuarioId = event["queryStringParameters"]["usuarioId"]
         videoId = event["queryStringParameters"]["videoId"]
         contenido = event["queryStringParameters"]["contenido"]
-        comentarioPadreId = event["queryStringParameters"]["comentarioPadreId"]
+        comentarioPadreId = -1#event["queryStringParameters"]["comentarioPadreId"]
         return comentar(usuarioId,videoId,contenido,comentarioPadreId)
     if op == "votar":
         usuarioId = event["queryStringParameters"]["usuarioId"]
