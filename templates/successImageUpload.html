@@ -49,12 +49,10 @@
             }
             )
             .done(function () {
-                $('#modalUploadVideo').removeClass('is-active');
                 swal('','Imagen guardada correctamente en la BBDD', 'success');
             })
             .fail(function () {
-                swal('','Error guardando la imagen en la BBDD', 'error');
-                
+                swal('','Error guardando la imagen en la BBDD', 'error'); 
             });
 
             asd.always(function () {

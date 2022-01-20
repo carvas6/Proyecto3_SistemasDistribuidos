@@ -47,33 +47,8 @@
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
               $('.modalChangePassword').load('fragments/modals/changePasswordModal.html');
 
-                var vres = "";
-                var asd = $.get(
-                    //"http://18.133.181.212/calculadora.php",
-                    "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
-
-                    {op: "inicio"},
-                    function (data) {
-                    function jsonEscape(str) {
-                        return str
-                        .replace(/\n/g, "\\\\n")
-                        .replace(/\r/g, "\\\\r")
-                        .replace(/\t/g, "\\\\t");
-                    }
-
-                    //descomentar esta línea si se usa PHP :
-                    //var json=JSON.parse(data);
-                    //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                    var json = data;
-                    alert("page content: " + JSON.stringify(json));
-                    //document.getElementById("res").innerHTML =
-                        "Resultado recibido:" + json.res;
-                    //window.location.replace(json.redirect);
-                    }
-                )
-                    .done(function () {
-                        //añadir videos
-                        var listaVideos = document.getElementById('listaVideos');
+              function anadirVideos(json){
+                var listaVideos = document.getElementById('listaVideos');
                         if(json.videos.length==0){
                             let emptyList = document.createElement('p');
                             emptyList.classList.add('is-subtitle', 'is-2');
@@ -133,6 +108,76 @@
                                 listaVideos.appendChild(box);
                             }
                         } 
+              }
+
+              const urlParams = new URLSearchParams(window.location.search);
+
+              const busqueda = urlParams.get('busqueda');
+
+              if(busqueda!=null){
+                var vres = "";
+                        var asd = $.get(
+                            //"http://18.133.181.212/calculadora.php",
+                            "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+
+                            { op: "buscarVideos", busqueda: busqueda},
+                            function (data) {
+                            function jsonEscape(str) {
+                                return str
+                                .replace(/\n/g, "\\\\n")
+                                .replace(/\r/g, "\\\\r")
+                                .replace(/\t/g, "\\\\t");
+                            }
+
+                            //descomentar esta línea si se usa PHP :
+                            //var json=JSON.parse(data);
+                            //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                            var json = data;
+                            alert("page content: " + JSON.stringify(json));
+                            document.getElementById("res").innerHTML =
+                                "Resultado recibido:" + json.res;
+                            //window.location.replace(json.redirect);
+                            }
+                        )
+                            .done(function () {
+                                anadirVideos(json);
+                            })
+                            .fail(function () {
+                                swal('','Error buscando videos', 'error');
+                            });
+
+                        asd.always(function () {
+                            //alert("second finished");
+                        });   
+              }
+              else{
+                var vres = "";
+                var asd = $.get(
+                    //"http://18.133.181.212/calculadora.php",
+                    "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
+
+                    {op: "inicio"},
+                    function (data) {
+                    function jsonEscape(str) {
+                        return str
+                        .replace(/\n/g, "\\\\n")
+                        .replace(/\r/g, "\\\\r")
+                        .replace(/\t/g, "\\\\t");
+                    }
+
+                    //descomentar esta línea si se usa PHP :
+                    //var json=JSON.parse(data);
+                    //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                    var json = data;
+                    alert("page content: " + JSON.stringify(json));
+                    //document.getElementById("res").innerHTML =
+                        "Resultado recibido:" + json.res;
+                    //window.location.replace(json.redirect);
+                    }
+                )
+                    .done(function () {
+                        //añadir videos
+                        anadirVideos(json);
                     })
                     .fail(function () {
                         swal('','Error cargando videos', 'error');
@@ -141,6 +186,7 @@
                 asd.always(function () {
                     //alert("second finished");
                 });
+              }
             });
 
             function verVideo(idVideo,idUsuario,nombreUsuarioVideo){

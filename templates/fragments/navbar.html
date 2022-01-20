@@ -29,9 +29,11 @@
                 <div id="navbarBasicExample" class="navbar-menu">
                     <div class="navbar-start">
                         <div class="navbar-item">
+                          <form id="buscarVideo">
                             <div class="field is-grouped">
+                             
                               <div class="control has-icons-right">
-                                <input type="text" class="input" style="width: 20rem;" placeholder="Busca el video por nombre o tag ...">
+                                <input type="text" class="input" style="width: 20rem;" id="busqueda" name="busqueda" placeholder="Busca el video por nombre, usuario o tag ...">
                                 <span class="icon is-right">
                                 <i class="fa fa-search"></i>
                               </span>
@@ -39,7 +41,9 @@
                               <div class="control">
                                 <input type="submit" class="button is-info" value="Buscar">
                               </div>
+
                             </div>
+                          </form>
                         </div>
                         <div class="navbar-item">
                             <a class="navbar-item navbar-averias has-text-weight-semibold Link" href="./comoFunciona.html">¿Cómo funciona?</a>
@@ -114,5 +118,14 @@
                             linksLarge[i].href += "&loggedUserId=" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;
                         }                   
                     }
+
+                    $("#buscarVideo").submit(function () {
+                        var busqueda = document.getElementById("busqueda").value;
+
+                        var loggedUsername = document.getElementById('nombreUsuario');
+                        var loggedUserId = document.getElementById('idUsuario');
+
+                        window.location.replace("/inicio.html?loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId + "&busqueda=" + busqueda);
+                    });
                 });
             </script>
