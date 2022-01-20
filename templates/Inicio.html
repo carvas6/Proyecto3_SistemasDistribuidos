@@ -112,15 +112,34 @@
 
               const urlParams = new URLSearchParams(window.location.search);
 
-              const busqueda = urlParams.get('busqueda');
+              var busqueda = urlParams.get('busqueda');
 
               if(busqueda!=null){
+
+                var myArraySearch = busqueda.split(" ");
+                var busqueda = "";
+                var tags = "";
+                var usuarios = "";
+                for(var i=0;i<myArraySearch.length;++i){
+                    switch(myArraySearch[i][0]){
+                        case '#':
+                            tags += myArraySearch[i] + " ";
+                            break;
+                        case '@':
+                            usuarios += myArraySearch[i] + " ";
+                            break;
+                        default:
+                            busqueda += myArraySearch[i] + " ";
+                            break;
+                    }
+                }
+
                 var vres = "";
                         var asd = $.get(
                             //"http://18.133.181.212/calculadora.php",
                             "https://6ceb939oi9.execute-api.eu-west-2.amazonaws.com/prueba_calculadora",
 
-                            { op: "buscarVideos", busqueda: busqueda},
+                            { op: "buscarVideos", busqueda: busqueda, tags: tags, usuarios: usuarios},
                             function (data) {
                             function jsonEscape(str) {
                                 return str
