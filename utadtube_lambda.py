@@ -178,7 +178,7 @@ def login(user,password):
             if row is not None:
                 body["id"] = row[0]
                 body["nombreUsuario"] = row[1]
-                body["redirectPage"] = urlbase+"misvideos.html"
+                body["redirectPage"] = urlbase+"profile.html"
     except pymysql.MySQLError as e:
         print(e)
         body["redirectPage"] = urlbase+"error.html"
@@ -219,7 +219,7 @@ def registrarse(nombreUsuario,email,nombreCompleto,contrasenya,fraseRecuperacion
                 cur.execute("select id from Usuario where nombreUsuario=%s",nombreUsuario)
                 conn.commit()
                 body["id"] = cur.fetchone()[0]
-                body["redirectPage"] = urlbase+"misvideos.html"
+                body["redirectPage"] = urlbase+"profile.html"
 
     except pymysql.MySQLError as e:
         print(e)
@@ -251,7 +251,7 @@ def recuperarContrasenya(user,nuevaContrasenya,fraseRecuperacion):
                     conn.commit()
                     body["fraseRecuperacion"] = True
                     body["id"] = row[0]
-                    body["redirectPage"] = urlbase+"misvideos.html"
+                    body["redirectPage"] = urlbase+"profile.html"
                 else:
                     body["fraseRecuperacion"] = False
             else:
