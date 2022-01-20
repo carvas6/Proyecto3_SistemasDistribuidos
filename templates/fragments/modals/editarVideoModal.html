@@ -81,9 +81,10 @@
       }
       else{
         var vres = "";
+        var json;
         var asd = $.get(
         //"http://18.133.181.212/calculadora.php",
-        "http://52.23.154.30",
+        "https://52.23.154.30",
 
         { op: "editarVideo", videoId: videoId, nombre: nombreVideo, descripcion: descriptionVideo, tags: tagsVideo},
         function (data) {
@@ -97,20 +98,20 @@
             //descomentar esta línea si se usa PHP :
             //var json=JSON.parse(data);
             //descomentar esta línea si se usa lambda-apigateway : var json=data;
-            var json = data;
+            json = data;
             alert("page content: " + JSON.stringify(json));
             //document.getElementById("res").innerHTML =
             //"Resultado recibido:" + json.res;
         }
         )
-        .done(function () {
+        .done(function (json) {
             $('#modalUploadVideo').removeClass('is-active');
             swal('','Video editado correctamente', 'success');
-            window.location.replace(json.redirect);
+            //window.location.replace(json.redirect);
         })
         .fail(function () {
             swal('','Error editando el video', 'error');
-            window.location.replace(json.redirect);
+            //window.location.replace(json.redirect);
         });
 
         asd.always(function () {

@@ -97,6 +97,7 @@
                     function likeVideo(valor){
 
                         var vres = "";
+                        var json;
                         var asd = $.get(
                             //"http://18.133.181.212/calculadora.php",
                             "http://52.23.154.30",
@@ -113,14 +114,14 @@
                             //descomentar esta línea si se usa PHP :
                             //var json=JSON.parse(data);
                             //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                            var json = data;
+                            json = data;
                             alert("page content: " + JSON.stringify(json));
                             //document.getElementById("res").innerHTML =
                              //   "Resultado recibido:" + json.res;
                             //window.location.replace(json.redirect);
                             }
                         )
-                            .done(function () {
+                            .done(function (json) {
                                 if(json.id == null){
                                     swal('Error votando video','Ya ha votado con aterioridad este video, solo se permite un voto por usuario y video', 'error');
                                 }
@@ -141,6 +142,7 @@
                         var contenido = document.getElementById('contenidoComentario');
 
                         var vres = "";
+                        var json;
                         var asd = $.get(
                             //"http://18.133.181.212/calculadora.php",
                             "http://52.23.154.30",
@@ -157,7 +159,7 @@
                             //descomentar esta línea si se usa PHP :
                             //var json=JSON.parse(data);
                             //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                            var json = data;
+                            json = data;
                             alert("page content: " + JSON.stringify(json));
                             //document.getElementById("res").innerHTML =
                             //    "Resultado recibido:" + json.res;
