@@ -96,7 +96,7 @@
                 var json;
                 var asd = $.get(
                     //"http://18.133.181.212/calculadora.php",
-                    "http://52.23.154.30",
+                    "https://52.23.154.30",
 
                     { op: "misvideos", usuarioId: idUsuario},
                     function (data) {
@@ -108,9 +108,9 @@
                     }
 
                     //descomentar esta línea si se usa PHP :
-                    //var json=JSON.parse(data);
+                    json=JSON.parse(data);
                     //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                    json = data;
+                    //json = data;
                     alert("page content: " + JSON.stringify(json));
                     //document.getElementById("res").innerHTML =
                     //    "Resultado recibido:" + json.res;

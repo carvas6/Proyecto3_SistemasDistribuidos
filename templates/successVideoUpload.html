@@ -14,13 +14,14 @@
         <script>
 
             function getAWSKeys() {
+                var json
               var asd=$.get(
-                   "http://52.23.154.30",
+                   "https://52.23.154.30",
                     {op: "subir"},
                     function(data) {
             
-                       var json=data;
-                       //json=JSON.parse(json);
+                       //var json=data;
+                       json=JSON.parse(json);
                        document.getElementById("Policy").value = json.stringToSign;
                        document.getElementById("X-Amz-Credential").value = json.xAmzCredential;		
                        document.getElementById("X-Amz-Date").value = json.amzDate;		

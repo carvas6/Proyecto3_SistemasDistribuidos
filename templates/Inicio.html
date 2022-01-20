@@ -54,6 +54,8 @@
 
               function anadirVideos(json){
                 var listaVideos = document.getElementById('listaVideos');
+                        console.log(typeof json)
+                        console.log(typeof json.videos)
                         if(json.videos.length==0){
                             let emptyList = document.createElement('p');
                             emptyList.classList.add('is-subtitle', 'is-2');
@@ -185,6 +187,7 @@
                     {op: "inicio"},
                     function (data) {
                     function jsonEscape(str) {
+                        console.log(str)
                         return str
                         .replace(/\n/g, "\\\\n")
                         .replace(/\r/g, "\\\\r")
@@ -192,10 +195,11 @@
                     }
 
                     //descomentar esta línea si se usa PHP :
-                    //var json=JSON.parse(data);
+                    json=JSON.parse(data);
                     //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                    json = data;
-                    alert("page content: " + JSON.stringify(json));
+                    //json = data;
+                    json = JSON.parse(json);
+                    alert("page content: " + data);
                     //document.getElementById("res").innerHTML =
                         //"Resultado recibido:" + json.res;
                     //window.location.replace(json.redirect);
