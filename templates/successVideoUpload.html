@@ -120,9 +120,9 @@
                 }
     
                 //descomentar esta línea si se usa PHP :
-                //var json=JSON.parse(data);
+                json=JSON.parse(data);
                 //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                json = data;
+                json=JSON.parse(json);
                 alert("page content: " + JSON.stringify(json));
                 //document.getElementById("res").innerHTML =
                 //"Resultado recibido:" + json.res;

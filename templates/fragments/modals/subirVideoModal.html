@@ -8,6 +8,7 @@
           function(data) {
   
              //var json=data;
+             json=JSON.parse(data);
              json=JSON.parse(json);
              document.getElementById("Policy").value = json.stringToSign;
              document.getElementById("X-Amz-Credential").value = json.xAmzCredential;		

@@ -95,6 +95,7 @@
 
           //descomentar esta línea si se usa PHP :
           json=JSON.parse(data);
+          json=JSON.parse(json);
           //descomentar esta línea si se usa lambda-apigateway : var json=data;
           //json = data;
           alert("page content: " + JSON.stringify(json));
@@ -103,14 +104,14 @@
           //window.location.replace(json.redirect);
         }
       )
-        .done(function (json) {
-          if(JSON.stringify(json)==""){
+        .done(function () {
+          if(json.id==0){
             document.getElementById('errorLogin').innerText="Usuario o Contraseña no válidos";
           }
           else{
             //loguear al usuario (descargar cookies)
             $('#modalLogin').removeClass('is-active');
-            window.location.replace("profile.html?idUsuario=" + json.id + "loggedUserId=" + json.id + "&loggedUsername=" + json.nombreUsuario);
+            window.location.replace("profile.html?idUsuario=" + json.id + "&loggedUserId=" + json.id + "&loggedUsername=" + json.nombreUsuario);
           }
         })
         .fail(function () {

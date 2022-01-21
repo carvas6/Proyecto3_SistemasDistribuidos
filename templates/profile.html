@@ -64,13 +64,13 @@
               $('.modalUploadVideo').load('fragments/modals/modalUploadVideo.html');
               $('.modalEditarVideo').load('fragments/modals/editarVideoModal.html');
 
-                var usuarioId = document.getElementById("idUsuario").value;
+                //var usuarioId = document.getElementById("idUsuario").value;
 
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const idUsuario = urlParams.get('idUsuario');
 
-                //var usuarioId = urlParams.get('loggedUserId');
+                var usuarioId = urlParams.get('loggedUserId');
 
                 if(usuarioId==null){
                     document.getElementById("infoPerfil").style="display:none;";
@@ -111,15 +111,16 @@
 
                     //descomentar esta línea si se usa PHP :
                     json=JSON.parse(data);
+                    json=JSON.parse(json);
                     //descomentar esta línea si se usa lambda-apigateway : var json=data;
                     //json = data;
                     alert("page content: " + JSON.stringify(json));
                     //document.getElementById("res").innerHTML =
                     //    "Resultado recibido:" + json.res;
-                    window.location.replace(json.redirect);
+                    //window.location.replace(json.redirect);
                     }
                 )
-                    .done(function (json) {
+                    .done(function () {
                         //añadir videos
                         var listaVideos = document.getElementById('listaVideos');
                         if(json.videos.length==0){

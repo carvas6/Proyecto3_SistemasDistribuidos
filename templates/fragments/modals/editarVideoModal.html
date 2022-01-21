@@ -97,6 +97,7 @@
 
             //descomentar esta línea si se usa PHP :
             json=JSON.parse(data);
+            json=JSON.parse(json);
             //descomentar esta línea si se usa lambda-apigateway : var json=data;
             //json = data;
             alert("page content: " + JSON.stringify(json));
@@ -104,7 +105,7 @@
             //"Resultado recibido:" + json.res;
         }
         )
-        .done(function (json) {
+        .done(function () {
             $('#modalUploadVideo').removeClass('is-active');
             swal('','Video editado correctamente', 'success');
             //window.location.replace(json.redirect);

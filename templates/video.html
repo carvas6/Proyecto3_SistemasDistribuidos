@@ -72,6 +72,8 @@
         <div class="modalChangePassword"></div>
         
         <script>
+
+
             $(document).ready(function () {
               //$('.head').load('fragments/header.html');
               $('.navbar').load('fragments/navbar.html');
@@ -86,59 +88,52 @@
               const urlParams = new URLSearchParams(window.location.search);
               const idVideo = urlParams.get('idVideo');
 
-                if(loggedUserId==null){
-                    document.getElementById("comentarButton").style="display:none;";
-                    document.getElementById("likeDislikeButtons").style="display:none;";
-                }
-                else{
-                    document.getElementById("likeDislikeButtons").style="display:block;";
-                    document.getElementById("comentarButton").style="display:block;";
+              function likeVideo(valor){
 
-                    function likeVideo(valor){
+                var vres = "";
+                var json;
+                var asd = $.get(
+                    //"http://18.133.181.212/calculadora.php",
+                    "https://www.macascript.com/index.php",
 
-                        var vres = "";
-                        var json;
-                        var asd = $.get(
-                            //"http://18.133.181.212/calculadora.php",
-                            "https://www.macascript.com/index.php",
-
-                            {op: "votar", usuarioId: loggedUserId, videoId: idVideo, valor: valor},
-                            function (data) {
-                            function jsonEscape(str) {
-                                return str
-                                .replace(/\n/g, "\\\\n")
-                                .replace(/\r/g, "\\\\r")
-                                .replace(/\t/g, "\\\\t");
-                            }
-
-                            //descomentar esta línea si se usa PHP :
-                            json=JSON.parse(data);
-                            //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                            //json = data;
-                            alert("page content: " + JSON.stringify(json));
-                            //document.getElementById("res").innerHTML =
-                             //   "Resultado recibido:" + json.res;
-                            //window.location.replace(json.redirect);
-                            }
-                        )
-                            .done(function (json) {
-                                if(json.id == null){
-                                    swal('Error votando video','Ya ha votado con aterioridad este video, solo se permite un voto por usuario y video', 'error');
-                                }
-                                else{
-                                    swal('','Voto realizado correctamente', 'error');
-                                    location.reload();
-                                }
-                            })
-                            .fail(function () {
-                                swal('','Error votando video', 'error');
-                            });
-
-                        asd.always(function () {
-                        });
+                    {op: "votar", usuarioId: loggedUserId, videoId: idVideo, valor: valor},
+                    function (data) {
+                    function jsonEscape(str) {
+                        return str
+                        .replace(/\n/g, "\\\\n")
+                        .replace(/\r/g, "\\\\r")
+                        .replace(/\t/g, "\\\\t");
                     }
 
-                    function Comentar(){
+                    //descomentar esta línea si se usa PHP :
+                    json=JSON.parse(data);
+                    json=JSON.parse(json);
+                    //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                    //json = data;
+                    alert("page content: " + JSON.stringify(json));
+                    //document.getElementById("res").innerHTML =
+                    //   "Resultado recibido:" + json.res;
+                    //window.location.replace(json.redirect);
+                    }
+                )
+                    .done(function (json) {
+                        if(json.id == null){
+                            swal('Error votando video','Ya ha votado con aterioridad este video, solo se permite un voto por usuario y video', 'error');
+                        }
+                        else{
+                            swal('','Voto realizado correctamente', 'error');
+                            location.reload();
+                        }
+                    })
+                    .fail(function () {
+                        swal('','Error votando video', 'error');
+                    });
+
+                asd.always(function () {
+                });
+              }
+
+              function Comentar(){
                         var contenido = document.getElementById('contenidoComentario');
 
                         var vres = "";
@@ -157,9 +152,9 @@
                             }
 
                             //descomentar esta línea si se usa PHP :
-                            //var json=JSON.parse(data);
+                            json=JSON.parse(data);
+                            json=JSON.parse(json);
                             //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                            json = data;
                             alert("page content: " + JSON.stringify(json));
                             //document.getElementById("res").innerHTML =
                             //    "Resultado recibido:" + json.res;
@@ -176,10 +171,19 @@
 
                         asd.always(function () {
                         });
-                    }
+            }
+
+                if(loggedUserId==null){
+                    document.getElementById("comentarButton").style="display:none;";
+                    document.getElementById("likeDislikeButtons").style="display:none;";
+                }
+                else{
+                    document.getElementById("likeDislikeButtons").style="display:block;";
+                    document.getElementById("comentarButton").style="display:block;";
                 }
 
               var vres = "";
+              var json;
                 var asd = $.get(
                     //"http://18.133.181.212/calculadora.php",
                     "https://www.macascript.com/index.php",
@@ -194,9 +198,9 @@
                     }
 
                     //descomentar esta línea si se usa PHP :
-                    //var json=JSON.parse(data);
+                    json=JSON.parse(data);
+                    json=JSON.parse(json);
                     //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                    var json = data;
                     alert("page content: " + JSON.stringify(json));
                     //document.getElementById("res").innerHTML =
                      //   "Resultado recibido:" + json.res;

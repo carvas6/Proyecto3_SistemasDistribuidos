@@ -109,6 +109,7 @@
                     else{
                         document.getElementById('entrar').style = "display:none;";
                         document.getElementById('desplegable').style = "display:block;";
+                        document.getElementById('usernameDesplegable').innerText = nombreUsuario;
                         var links = document.getElementsByClassName('Link');
                         for(var i=0;i<links.length;++i){
                             links[i].href += "?loggedUserId=" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;

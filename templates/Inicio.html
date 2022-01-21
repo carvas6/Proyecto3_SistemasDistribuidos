@@ -62,7 +62,7 @@
                             emptyList.style="color:red;";
                             emptyList.innerText ="Actualmente no hay ningún video";
                             listaVideos.classList.add('has-text-centered');
-                            listaVideos.innerHTML = emptyList;
+                            listaVideos.appendChild(emptyList);
                         }
                         else{
                             for(var i=0;i<json.videos.length;++i){
@@ -71,7 +71,7 @@
                                 
                                 let linkBox = document.createElement('a');
                                 linkBox.style = "color:black;";
-                                linkBox.setAttribute('onclick', "verVideo(" + json.videos[i].id + "," + json.videos[i].usuarioId + "," + json.videos[i].nombreUsuario + ")");
+                                linkBox.setAttribute('onclick', "verVideo(" + json.videos[i].id + "," + json.videos[i].usuarioId + ",'" + json.videos[i].nombreUsuario + "')");
 
                                 let boxColumn = document.createElement('div');
                                 boxColumn.classList.add('column', 'is-narrow', 'has-text-centered');
@@ -79,7 +79,7 @@
                                 let image = document.createElement('img');
                                 image.classList.add('image', 'img-responsive');
                                 if(json.videos[i].imagen==null){
-                                    image.src = "/static/images/videoImageDeafult.png";
+                                    image.src = "../static/images/videoImageDeafult.png";
                                 }else{
                                     image.src = json.videos[i].imagen;
                                 }
@@ -102,7 +102,7 @@
                                 let videoDate = document.createElement('p');
                                 videoDate.innerText = json.videos[i].fechaSubida;
 
-                                videoName.innerHTML = videoNameBold;
+                                videoName.appendChild(videoNameBold);
                                 bottom.appendChild(videoName);
                                 bottom.appendChild(videoUsername);
                                 bottom.appendChild(videoDate);
@@ -110,8 +110,8 @@
                                 boxColumn.appendChild(image);
                                 boxColumn.appendChild(bottom);
 
-                                linkBox.innerHTML = boxColumn;
-                                box.innerHTML = linkBox;
+                                linkBox.appendChild(boxColumn);
+                                box.appendChild(linkBox);
                                 listaVideos.appendChild(box);
                             }
                         } 
@@ -157,16 +157,16 @@
                             }
 
                             //descomentar esta línea si se usa PHP :
-                            //var json=JSON.parse(data);
+                            json=JSON.parse(data);
                             //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                            json = data;
+                            json=JSON.parse(json);
                             alert("page content: " + JSON.stringify(json));
                             //document.getElementById("res").innerHTML =
                               //  "Resultado recibido:" + json.res;
                             //window.location.replace(json.redirect);
                             }
                         )
-                            .done(function (json) {
+                            .done(function () {
                                 anadirVideos(json);
                             })
                             .fail(function () {
@@ -224,7 +224,7 @@
                 var loggedUsername = document.getElementById('nombreUsuario').value;
                 var loggedUserId = document.getElementById('idUsuario').value;
 
-                window.location.replace("/video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
+                window.location.replace("video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername=" + loggedUsername + "&loggedUserId=" + loggedUserId);
             }
         </script>
     </body>
