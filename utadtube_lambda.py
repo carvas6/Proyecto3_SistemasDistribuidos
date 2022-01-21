@@ -358,14 +358,15 @@ def misVideos(usuarioId):
     body = {}
     try:
         with conn.cursor() as cur:
-            cur.execute("select id,nombre,fechaSubida from Video where usuarioId="+body["id"]+" order by fechaSubida")
+            cur.execute("select id,nombre,fechaSubida from Video where usuarioId="+str(usuarioId)+" order by fechaSubida")
             conn.commit()
+            body["videos"] = []
             for video in cur.fetchall():
                 body["videos"].append(
                     {
                         "id": video[0],
-                        "nombre": video[0],
-                        "fechaSubida": video[3].strftime("%m/%d/%Y, %H:%M:%S"),
+                        "nombre": video[1],
+                        "fechaSubida": video[2].strftime("%m/%d/%Y, %H:%M:%S"),
                         "tags": tagsDeVideo(conn,video[0])
                     }
                 )
@@ -458,7 +459,7 @@ def video(id):
     body = {}
     try:
         with conn.cursor() as cur:
-            cur.execute("select u.id,v.nombre,u.nombreUsuario,v.descripcion,v.tamanyo,v.rutaAWS,v.fechaSubida,v.ultimaModificacion "+
+            cur.execute("select u.id,v.nombre,u.nombreUsuario,v.descripcion,v.rutaAWS,v.fechaSubida,v.ultimaModificacion "+
                         "from Video v join Usuario u on u.id = v.usuarioId "+
                         "where v.id = "+str(id))
             conn.commit()
@@ -468,10 +469,9 @@ def video(id):
                 "nombreVideo": row[1],
                 "nombreUsuario": row[2],
                 "descripcion": row[3],
-                "tamanyo": row[4],
-                "rutaAWS": row[5],
-                "fechaSubida": row[6].strftime("%m/%d/%Y, %H:%M:%S"),
-                "ultimaModificacion": row[7].strftime("%m/%d/%Y, %H:%M:%S"),
+                "rutaAWS": row[4],
+                "fechaSubida": row[5].strftime("%m/%d/%Y, %H:%M:%S"),
+                "ultimaModificacion": row[6].strftime("%m/%d/%Y, %H:%M:%S"),
                 "tags": tagsDeVideo(conn,id),
                 "votosPositivos": votosPositivos(conn,id),
                 "votosNegativos": votosNegativos(conn,id),
