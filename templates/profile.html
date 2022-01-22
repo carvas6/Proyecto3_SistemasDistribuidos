@@ -20,6 +20,9 @@
         <div class="columns">
             <div class="section is-clearfix column is-four-fifths">
 
+                <h1 id="profileName"></h1>
+                <br>
+
                 <div class="columns is-multiline" id="listaVideos">
 
                     <!--<div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd"  style="height:fit-content;">
@@ -41,7 +44,7 @@
             </div>
             <div class="section column is-one-fifths" id="infoPerfil">
                 <p>Información de perfil sólo si el usuario está logueado y es su perfil</p>
-                <a onclick="$('#modalUploadVideo').addClass('is-active')">Subir Video</a>
+                <button class="button is-primary is-rounded has-text-weight-semibold" onclick="$('#modalUploadVideo').addClass('is-active')">Subir Video</button>
             </div>
         </div>
         
@@ -74,6 +77,8 @@
 
                 if(usuarioId==null){
                     document.getElementById("infoPerfil").style="display:none;";
+                    document.getElementById("profileName").style="display:block;";
+                    document.getElementById("profileName").innerText="Perfil de usuario número " + idUsuario;
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
                         botonEditar.style="display:none;";
@@ -81,6 +86,7 @@
                 }
                 else if(usuarioId == idUsuario){
                     document.getElementById("infoPerfil").style="display:inline-block;";
+                    document.getElementById("profileName").style="display:none;";
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
                         botonEditar.style="display:block;";
@@ -88,6 +94,8 @@
                 }
                 else{
                     document.getElementById("infoPerfil").style="display:none;";
+                    document.getElementById("profileName").style="display:block;";
+                    document.getElementById("profileName").innerText="Perfil de usuario número " + idUsuario;
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
                         botonEditar.style="display:none;";
@@ -146,7 +154,7 @@
                                 let image = document.createElement('img');
                                 image.classList.add('image', 'img-responsive');
                                 if(json.videos[i].imagen==null){
-                                    image.src = "/static/images/videoImageDeafult.png";
+                                    image.src = "../static/images/videoImageDeafult.png";
                                 }else{
                                     image.src = json.videos[i].imagen;
                                 }
@@ -203,7 +211,7 @@
                 var loggedUsername = document.getElementById('nombreUsuario').value;
                 var loggedUserId = document.getElementById('idUsuario').value;
 
-                window.location.replace("/video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
+                window.location.replace("video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
             }
 
             function editarVideo(videoId){

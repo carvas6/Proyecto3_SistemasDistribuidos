@@ -96,11 +96,11 @@
 
                     const idUsuario = urlParams.get('loggedUserId');
                     document.getElementById("idUsuario").value = idUsuario;
-                    alert("navbar-"+idUsuario);
+                    //alert("navbar-"+idUsuario);
 
                     const nombreUsuario = urlParams.get('loggedUsername');
                     document.getElementById("nombreUsuario").value = nombreUsuario;
-                    alert("navbar-"+nombreUsuario);
+                    //alert("navbar-"+nombreUsuario);
 
                     if(idUsuario==null && nombreUsuario==null  || idUsuario=="" && nombreUsuario==""){
                         document.getElementById('entrar').style = "display:block;";
