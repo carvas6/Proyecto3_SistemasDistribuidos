@@ -174,7 +174,7 @@
                                 linkEdit.setAttribute('onclick', "editarVideo(" + json.videos[i].id + ")");
                                 linkEdit.classList.add('editarVideoButton');
 
-                                videoName.innerHTML = videoNameBold;
+                                videoName.appendChild(videoNameBold);
                                 bottom.appendChild(videoName);
                                 bottom.appendChild(videoUsername);
                                 bottom.appendChild(videoDate);
