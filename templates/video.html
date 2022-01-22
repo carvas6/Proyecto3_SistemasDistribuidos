@@ -19,6 +19,8 @@
 
                 const urlParams = new URLSearchParams(window.location.search);
                 const idVideo = urlParams.get('idVideo');
+                var loggedUsername = urlParams.get('loggedUsername');
+                var loggedUserId = urlParams.get('loggedUserId');
 
                 var vres = "";
                 var json;
@@ -51,7 +53,7 @@
                             swal('Error votando video','Ya ha votado con aterioridad este video, solo se permite un voto por usuario y video', 'error');
                         }
                         else{
-                            swal('','Voto realizado correctamente', 'error');
+                            swal('','Voto realizado correctamente', 'success');
                             location.reload();
                         }
                     })
@@ -69,6 +71,8 @@
 
                         const urlParams = new URLSearchParams(window.location.search);
                         const idVideo = urlParams.get('idVideo');
+                        var loggedUsername = urlParams.get('loggedUsername');
+                        var loggedUserId = urlParams.get('loggedUserId');
 
                         var vres = "";
                         var json;
@@ -96,7 +100,7 @@
                             }
                         )
                             .done(function () {
-                                swal('','Comentario realizado correctamente', 'error');
+                                swal('','Comentario realizado correctamente', 'success');
                                 location.reload();
                             })
                             .fail(function () {
@@ -153,6 +157,7 @@
                         <p>este es un comentario sobre el video</p>
                     </div>-->
                 </div>
+                <hr>
                 <div id="comentarButton">
                     <textarea id="contenidoComentario"></textarea>
                     <a onclick="Comentar();" type="button" class="button is-primary">Comentar</a>
