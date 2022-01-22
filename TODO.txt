@@ -1,3 +1,4 @@
 1. Menu desplegable en movil no se despliega
 2. Boton subir video no funciona
 3. No se diferencia cuando se está logueado y cuando no (pasa un usuarioId vacio y l considera logueado)
+4. No se puede votar
