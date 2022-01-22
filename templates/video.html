@@ -247,7 +247,8 @@
 
                         var usuarioVideoLink = document.getElementById('usuarioVideoLink');
 
-                        usuarioVideoLink.href = "/profile.html?idUsuario=" + json.video.usuarioId;
+                        usuarioVideoLink.href = "profile.html?idUsuario=" + json.video.usuarioId;
+                        usuarioVideoLink.classList.add('Link-large');
 
                         var descripcionVideo = document.getElementById('descripcionVideo');
                         descripcionVideo.innerText = json.video.descripcion;

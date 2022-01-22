@@ -104,7 +104,7 @@
                     document.getElementById("nombreUsuario").value = nombreUsuario;
                     alert("navbar-"+nombreUsuario);
 
-                    if(idUsuario==null && nombreUsuario==null){
+                    if(idUsuario==null && nombreUsuario==null  || idUsuario=="" && nombreUsuario==""){
                         document.getElementById('entrar').style = "display:block;";
                         document.getElementById('desplegable').style = "display:none;";
                     }
@@ -114,7 +114,7 @@
                         document.getElementById('usernameDesplegable').innerText = nombreUsuario;
                         var links = document.getElementsByClassName('Link');
                         for(var i=0;i<links.length;++i){
-                            links[i].href += "?idUsuario=" + idUsuario + "&loggedUserId" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;
+                            links[i].href += "?idUsuario=" + idUsuario + "&loggedUserId=" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;
                         } 
                         var linksLarge = document.getElementsByClassName('Link-large');
                         for(var i=0;i<links.length;++i){
