@@ -65,7 +65,7 @@
               $('.modalLogin').load('fragments/modals/loginModal.html');
               $('.modalRegister').load('fragments/modals/registerModal.html');
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
-              $('.modalUploadVideo').load('fragments/modals/modalUploadVideo.html');
+              $('.modalUploadVideo').load('fragments/modals/subirVideoModal.html');
               $('.modalEditarVideo').load('fragments/modals/editarVideoModal.html');
 
                 //var usuarioId = document.getElementById("idUsuario").value;
@@ -212,7 +212,7 @@
                 var loggedUsername = document.getElementById('nombreUsuario').value;
                 var loggedUserId = document.getElementById('idUsuario').value;
 
-                window.location.replace("video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId);
+                window.location.replace("video.html?idVideo=" + idVideo + "&idUsuario=" + idUsuario + "&nombreUsuarioVideo=" + nombreUsuarioVideo + "&loggedUsername=" + loggedUsername + "&loggedUserId=" + loggedUserId);
             }
 
             function editarVideo(videoId){
