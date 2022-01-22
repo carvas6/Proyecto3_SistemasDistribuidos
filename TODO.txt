@@ -1,0 +1,2 @@
+1. Menu desplegable en movil no se despliega
+2. Boton subir video no funciona
