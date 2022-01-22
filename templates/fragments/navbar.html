@@ -114,7 +114,7 @@
                         document.getElementById('usernameDesplegable').innerText = nombreUsuario;
                         var links = document.getElementsByClassName('Link');
                         for(var i=0;i<links.length;++i){
-                            links[i].href += "?loggedUserId=" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;
+                            links[i].href += "?idUsuario=" + idUsuario + "&loggedUserId" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;
                         } 
                         var linksLarge = document.getElementsByClassName('Link-large');
                         for(var i=0;i<links.length;++i){
