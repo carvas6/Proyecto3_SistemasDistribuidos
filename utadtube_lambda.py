@@ -8,12 +8,12 @@ import os, base64, datetime, hashlib, hmac
 urlbase = "https://utadtube.s3.amazonaws.com/htmls/"
 
 # Variables de sql
-rds_host = "52.23.154.30"
+rds_host = "macascript.com"
 
 username = "user"
 password = "password"
 
-dbname = "macatubedb"
+dbname = "utadtubedb"
 
 # Variables de S3
 access_key = 'ASIAXBQ2N3L4U3K3IHLA'
