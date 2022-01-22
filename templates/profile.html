@@ -78,7 +78,6 @@
 
                 if(usuarioId==null){
                     document.getElementById("infoPerfil").style="display:none;";
-                    document.getElementById("profileName").style="display:block;";
                     document.getElementById("profileName").innerText="Perfil de usuario número " + idUsuario;
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
@@ -87,7 +86,7 @@
                 }
                 else if(usuarioId == idUsuario){
                     document.getElementById("infoPerfil").style="display:inline-block;";
-                    document.getElementById("profileName").style="display:none;";
+                    document.getElementById("profileName").innerText="Mi perfil";
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
                         botonEditar.style="display:block;";
@@ -95,7 +94,6 @@
                 }
                 else{
                     document.getElementById("infoPerfil").style="display:none;";
-                    document.getElementById("profileName").style="display:block;";
                     document.getElementById("profileName").innerText="Perfil de usuario número " + idUsuario;
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
