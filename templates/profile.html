@@ -129,7 +129,7 @@
                             emptyList.style="color:red;";
                             emptyList.innerText ="Actualmente no hay ningún video";
                             listaVideos.classList.add('has-text-centered');
-                            listaVideos.innerHTML = emptyList;
+                            listaVideos.appendChild(emptyList);
                         }
                         else{
                             for(var i=0;i<json.videos.length;++i){
@@ -182,7 +182,7 @@
                                 boxColumn.appendChild(image);
                                 boxColumn.appendChild(bottom);
 
-                                linkBox.innerHTML = boxColumn;
+                                linkBox.appendChild(boxColumn);
                                 box.appendChild(linkBox);
                                 box.appendChild(linkEdit);
                                 listaVideos.appendChild(box);

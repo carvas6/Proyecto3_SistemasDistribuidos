@@ -239,28 +239,28 @@
 
                         var comentarios = document.getElementById('comentariosVideo');
                         var numeroComentarios = document.createElement('p');
-                        numeroComentarios.innerText = json.video.cometarios.length + " comentarios";
+                        numeroComentarios.innerText = json.video.comentarios.length + " comentarios";
                         comentarios.appendChild(numeroComentarios);
 
-                        for(var i=0;i<json.video.cometarios.length;++i){
-                            var cometario = document.createElement('div');
+                        for(var i=0;i<json.video.comentarios.length;++i){
+                            var comentario = document.createElement('div');
                             var tituloLink = document.createElement('a');
                             var titulo = document.createElement('p');
                             var tituloBold = document.createElement('b');
                             var contenido = document.createElement('p');
                             var saltoLinea = document.createElement('br');
 
-                            tituloBold.innerText = json.video.cometarios[i].nombreUsuario;
-                            contenido.innerText = json.video.cometarios[i].contenido;
+                            tituloBold.innerText = json.video.comentarios[i].nombreUsuario;
+                            contenido.innerText = json.video.comentarios[i].contenido;
                             tituloLink.classList.add('Link-large');
-                            tituloLink.href="/profile.html?idUsuario=" + json.video.cometarios[i].idUsuario;
+                            tituloLink.href="/profile.html?idUsuario=" + json.video.comentarios[i].idUsuario;
 
                             titulo.appendChild(tituloBold);
                             tituloLink.appendChild(titulo);
-                            cometario.appendChild(tituloLink);
-                            cometario.appendChild(contenido);
+                            comentario.appendChild(tituloLink);
+                            comentario.appendChild(contenido);
                             comentarios.appendChild(saltoLinea);
-                            comentarios.appendChild(cometario);
+                            comentarios.appendChild(comentario);
                         }
                         
                     })
