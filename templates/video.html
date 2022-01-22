@@ -30,8 +30,8 @@
                     <p id="dislikes">DisLikes</p>
                 </div>
                 <div style="display:flex;justify-content: space-between;" id="likeDislikeButtons">
-                    <a id="likeButton" onclick="likeVideo(1)">Me gusta el video <i class="fas fa-thumbs-up" style="color:blue;"></i></a>
-                    <a id="dislikeButton"  onclick="likeVideo(-1)">No me gusta el video <i class="fas fa-thumbs-down" style="color:red;"></i></a>
+                    <a id="likeButton" onclick="likeVideo(1);">Me gusta el video <i class="fas fa-thumbs-up" style="color:blue;"></i></a>
+                    <a id="dislikeButton"  onclick="likeVideo(-1);">No me gusta el video <i class="fas fa-thumbs-down" style="color:red;"></i></a>
                 </div>
                 <hr>
                 <a href="" id="usuarioVideoLink" class="Link-large"><h2 class="subtitle" id="usuarioVideo">Nombre de usuario</h2></a>
@@ -58,7 +58,7 @@
                 </div>
                 <div id="comentarButton">
                     <textarea id="contenidoComentario"></textarea>
-                    <a onclick="Comentar()" type="button" class="button is-primary">Comentar</a>
+                    <a onclick="Comentar();" type="button" class="button is-primary">Comentar</a>
                 </div>
             </div>
             <div class="section column is-one-fifths">
@@ -88,52 +88,60 @@
               const urlParams = new URLSearchParams(window.location.search);
               const idVideo = urlParams.get('idVideo');
 
-              function likeVideo(valor){
+                if(loggedUserId==null){
+                    document.getElementById("comentarButton").style="display:none;";
+                    document.getElementById("likeDislikeButtons").style="display:none;";
+                }
+                else{
+                    document.getElementById("likeDislikeButtons").style="display:block;";
+                    document.getElementById("comentarButton").style="display:block;";
 
-                var vres = "";
-                var json;
-                var asd = $.get(
-                    //"http://18.133.181.212/calculadora.php",
-                    "https://www.macascript.com/index.php",
+                    function likeVideo(valor){
 
-                    {op: "votar", usuarioId: loggedUserId, videoId: idVideo, valor: valor},
-                    function (data) {
-                    function jsonEscape(str) {
-                        return str
-                        .replace(/\n/g, "\\\\n")
-                        .replace(/\r/g, "\\\\r")
-                        .replace(/\t/g, "\\\\t");
+                        var vres = "";
+                        var json;
+                        var asd = $.get(
+                            //"http://18.133.181.212/calculadora.php",
+                            "https://www.macascript.com/index.php",
+
+                            {op: "votar", usuarioId: loggedUserId, videoId: idVideo, valor: valor},
+                            function (data) {
+                            function jsonEscape(str) {
+                                return str
+                                .replace(/\n/g, "\\\\n")
+                                .replace(/\r/g, "\\\\r")
+                                .replace(/\t/g, "\\\\t");
+                            }
+
+                            //descomentar esta línea si se usa PHP :
+                            json=JSON.parse(data);
+                            json=JSON.parse(json);
+                            //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                            //json = data;
+                            alert("page content: " + JSON.stringify(json));
+                            //document.getElementById("res").innerHTML =
+                            //   "Resultado recibido:" + json.res;
+                            //window.location.replace(json.redirect);
+                            }
+                        )
+                            .done(function (json) {
+                                if(json.id == null){
+                                    swal('Error votando video','Ya ha votado con aterioridad este video, solo se permite un voto por usuario y video', 'error');
+                                }
+                                else{
+                                    swal('','Voto realizado correctamente', 'error');
+                                    location.reload();
+                                }
+                            })
+                            .fail(function () {
+                                swal('','Error votando video', 'error');
+                            });
+
+                        asd.always(function () {
+                        });
                     }
 
-                    //descomentar esta línea si se usa PHP :
-                    json=JSON.parse(data);
-                    json=JSON.parse(json);
-                    //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                    //json = data;
-                    alert("page content: " + JSON.stringify(json));
-                    //document.getElementById("res").innerHTML =
-                    //   "Resultado recibido:" + json.res;
-                    //window.location.replace(json.redirect);
-                    }
-                )
-                    .done(function (json) {
-                        if(json.id == null){
-                            swal('Error votando video','Ya ha votado con aterioridad este video, solo se permite un voto por usuario y video', 'error');
-                        }
-                        else{
-                            swal('','Voto realizado correctamente', 'error');
-                            location.reload();
-                        }
-                    })
-                    .fail(function () {
-                        swal('','Error votando video', 'error');
-                    });
-
-                asd.always(function () {
-                });
-              }
-
-              function Comentar(){
+                    function Comentar(){
                         var contenido = document.getElementById('contenidoComentario');
 
                         var vres = "";
@@ -171,15 +179,7 @@
 
                         asd.always(function () {
                         });
-            }
-
-                if(loggedUserId==null){
-                    document.getElementById("comentarButton").style="display:none;";
-                    document.getElementById("likeDislikeButtons").style="display:none;";
-                }
-                else{
-                    document.getElementById("likeDislikeButtons").style="display:block;";
-                    document.getElementById("comentarButton").style="display:block;";
+                    }
                 }
 
               var vres = "";
