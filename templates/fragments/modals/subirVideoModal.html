@@ -38,10 +38,12 @@
     var tagsVideo = document.getElementById("tagsVideo").value;
 
     if(tiene_letras(nombreVideo) == 1){
-      nombreVideo.setCustomValidity("Nombre de video no puede contener '#' ni '@'");
+      document.getElementById("errorNameVideoUpload").innerText = "Nombre de video no puede contener '#' ni '@'";
+      document.getElementById("errorTagsNameVideoUpload").innerText = "";
       return;
     }else if(tiene_letras(tagsVideo) == 1){
-      tagsVideo.setCustomValidity("Tags de video no puede contener '#' ni '@'");
+      document.getElementById("errorTagsNameVideoUpload").innerText = "Tags de video no puede contener '#' ni '@'";
+      document.getElementById("errorNameVideoUpload").innerText = "";
       return;
     }    
     var nombreUsuario = document.getElementById('nombreUsuario').value;
@@ -64,6 +66,15 @@
     document.getElementById("success_action_redirect").value += "?loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&rutaAWSvideo=" + encoded;
 
     $('#formUploadVideo').submit();
+
+    swal("Espere mientras se procesa su solicitud...\nEsto puede tardar unos segundos.", {
+        title: "Subiendo Video..",
+        icon: "info",
+        buttons: false,
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+        className: "video_upload",
+    });
   }
   
   </script>
@@ -145,7 +156,8 @@
 <script>
     $(document).ready(function () {
       getAWSKeys();
-
+      document.getElementById("errorNameVideoUpload").innerText = "";
+      document.getElementById("errorTagsNameVideoUpload").innerText = "";
       //var loggedUser = document.getElementById('nombreUsuario').value;
       //document.getElementById('formUploadVideo').action = "https://utad-tube.s3.amazonaws.com/users/" + loggedUser + "/";
     });

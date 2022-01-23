@@ -55,6 +55,15 @@
               document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + encoded;
 
               $('#formUploadImage').submit();
+
+              swal("Espere mientras se procesa su solicitud...\nEsto puede tardar unos segundos.", {
+                title: "Subiendo Imagen..",
+                icon: "info",
+                buttons: false,
+                closeOnClickOutside: false,
+                closeOnEsc: false,
+                className: "image_upload",
+              });
             }
             
         </script>
