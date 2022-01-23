@@ -37,19 +37,29 @@
     var nombreVideo = document.getElementById("videoName").value;
     var tagsVideo = document.getElementById("tagsVideo").value;
 
+    var videoArchive = document.getElementById("videoArchive").files[0].name;
+
+    var allowedExtensions = /(.mp4|.mpeg|.avi|.mkv|.flv|.mov|.wmv|.divx)$/i;
+
     if(tiene_letras(nombreVideo) == 1){
       document.getElementById("errorNameVideoUpload").innerText = "Nombre de video no puede contener '#' ni '@'";
       document.getElementById("errorTagsNameVideoUpload").innerText = "";
+      document.getElementById("errorTypeVideoUpload").innerText = "";
       return;
     }else if(tiene_letras(tagsVideo) == 1){
       document.getElementById("errorTagsNameVideoUpload").innerText = "Tags de video no puede contener '#' ni '@'";
       document.getElementById("errorNameVideoUpload").innerText = "";
+      document.getElementById("errorTypeVideoUpload").innerText = "";
+      return;
+    }else if(!allowedExtensions.exec(videoArchive)){
+      document.getElementById("errorTypeVideoUpload").innerText = "Por favor sube un archivo de video, las extensiones válidas son: .mp4/.mpeg/.avi/.mkv/.flv/.mov/.wmv/.divx sólo";
+      document.getElementById("errorTagsNameVideoUpload").innerText = "";
+      document.getElementById("errorNameVideoUpload").innerText = "";
+      document.getElementById("videoArchive").value = '';
       return;
     }    
-    var nombreUsuario = document.getElementById('nombreUsuario').value;
-
     
-    var videoArchive = document.getElementById("videoArchive").files[0].name;
+    var nombreUsuario = document.getElementById('nombreUsuario').value;
  
     videoArchive = Date.now() + videoArchive;
 

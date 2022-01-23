@@ -41,6 +41,15 @@
               var idVideo = document.getElementById("idVideo").value;
 
               var imageArchive = document.getElementById("imageArchive").files[0].name;
+
+              var allowedExtensions = /(.jpg|.jpeg|.png|.gif)$/i;
+              if(!allowedExtensions.exec(imageArchive)){
+                
+                document.getElementById("errorTypeImageUpload").innerText = "Por favor sube un archivo de imagen, las extensiones válidas son: .jpeg/.jpg/.png/.gif sólo";
+                document.getElementById("imageArchive").value = '';
+                return;
+              }
+
               imageArchive = Date.now() + imageArchive;
 
               document.getElementById("key").value = "users/" + nombreUsuario + "/" + imageArchive;
@@ -105,6 +114,7 @@
         $(document).ready(function () {
             //$('.head').load('fragments/header.html');
             $('.navbar').load('fragments/navbar.html');
+            document.getElementById("errorTypeImageUpload").innerText = "";
 
             const urlParams = new URLSearchParams(window.location.search);
 
