@@ -19,7 +19,7 @@
         <input type="hidden" id="nombreUsuario"><!--nombreUsuario-->
         
         <div class="columns">
-            <div class="section is-clearfix column is-four-fifths">
+            <div id="divVideos" class="section is-clearfix column is-four-fifths">
 
                 <h1 id="profileName"></h1>
                 <br>
@@ -79,6 +79,8 @@
                 if(usuarioId==null){
                     document.getElementById("infoPerfil").style="display:none;";
                     document.getElementById("profileName").innerText="Perfil de usuario número " + idUsuario;
+                    $('#divVideos').removeClass('is-four-fifths');
+                    $('#divVideos').addClass('is-full');
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
                         botonEditar.style="display:none;";
@@ -87,6 +89,8 @@
                 else if(usuarioId == idUsuario){
                     document.getElementById("infoPerfil").style="display:inline-block;";
                     document.getElementById("profileName").innerText="Mi perfil";
+                    $('#divVideos').removeClass('is-full');
+                    $('#divVideos').addClass('is-four-fifths');
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
                         botonEditar.style="display:block;";
@@ -95,6 +99,8 @@
                 else{
                     document.getElementById("infoPerfil").style="display:none;";
                     document.getElementById("profileName").innerText="Perfil de usuario número " + idUsuario;
+                    $('#divVideos').removeClass('is-four-fifths');
+                    $('#divVideos').addClass('is-full');
                     var botonEditar = document.getElementsByClassName("editarVideoButton");
                     for(var i=0;i<botonEditar.length;++i){
                         botonEditar.style="display:none;";
