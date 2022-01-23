@@ -1,4 +1,5 @@
-#Puesta en marcha
+# Puesta en marcha
+
 cambiar ip de la ec2 en godaddy
 
 reiniciar mariadb en kubernetes en la ec2:
