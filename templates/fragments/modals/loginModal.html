@@ -72,6 +72,18 @@
   ></button>
 </div>
 <script>
+  var equivocaciones = 0
+
+  function banear(){
+    var user = $("#usernameLogin").val();
+    var asd = $.get("https://www.macascript.com/index.php",
+    {op: "banear", user: user},
+    function(data){
+      //VACIO
+      alert(JSON.parse(data));
+    })
+  }
+
   $(document).ready(function () {
     document.getElementById('errorLogin').innerText="";
     $("#loginButton").click(function () {
@@ -106,7 +118,12 @@
       )
         .done(function () {
           if(json.id==0){
-            document.getElementById('errorLogin').innerText="Usuario o Contraseña no válidos";
+            if(++equivocaciones == 3){
+              banear()
+              document.getElementById('errorLogin').innerText="Usuario o Contraseña no válidos, este usuario ha sido deshabilitado";
+
+            }else
+              document.getElementById('errorLogin').innerText="Usuario o Contraseña no válidos, "+(3-equivocaciones)+" intentos";
           }
           else{
             //loguear al usuario (descargar cookies)
