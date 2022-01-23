@@ -72,6 +72,7 @@
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const idUsuario = urlParams.get('idUsuario');
+                const nombreUsuario = urlParams.get('nombreUsuario');
 
                 var usuarioId = urlParams.get('loggedUserId');
 
@@ -176,7 +177,7 @@
 
                                 let videoUsername = document.createElement('h2');
                                 videoUsername.classList.add('is-subtitle', 'is-6');
-                                videoUsername.innerText = json.videos[i].nombreUsuario;
+                                videoUsername.innerText = nombreUsuario;
 
                                 let videoDate = document.createElement('p');
                                 videoDate.innerText = json.videos[i].fechaSubida;

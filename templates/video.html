@@ -119,7 +119,7 @@
 
         <div class="columns">
             <div class="section column is-four-fifths">
-                <video controls class="video" id="videoPlay" width="100%" src="https://www.youtube.com/681324c4-4a97-4fac-a097-d6a427bde958">
+                <video style="height:36vh" controls class="video" id="videoPlay" width="100%" src="https://www.youtube.com/681324c4-4a97-4fac-a097-d6a427bde958">
                 </video>
                 <h1 class="title" id="tituloVideo">Titulo de video
                 </h1>
@@ -269,7 +269,7 @@
 
                             tituloBold.innerText = json.video.comentarios[i].nombreUsuario;
                             contenido.innerText = json.video.comentarios[i].contenido;
-                            tituloLink.href="profile.html?idUsuario=" + json.video.comentarios[i].usuarioId;
+                            tituloLink.href="profile.html?idUsuario=" + json.video.comentarios[i].usuarioId + "&nombreUsuario=" + json.video.comentarios[i].nombreUsuario;
                             tituloLink.classList.add('Link-large');
 
                             titulo.appendChild(tituloBold);
