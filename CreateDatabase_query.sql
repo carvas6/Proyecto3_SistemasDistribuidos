@@ -33,6 +33,7 @@ CREATE TABLE Usuario (
   nombreUsuario varchar(30) NOT NULL,
   contrasenya varchar(255) NOT NULL,
   fraseRecuperacion varchar(100) NOT NULL,
+  habilidado BOOLEAN DEFAULT TRUE,
   PRIMARY KEY (id),
   UNIQUE KEY usuario_UN1(email),
   UNIQUE KEY usuario_UN2 (nombreUsuario)
