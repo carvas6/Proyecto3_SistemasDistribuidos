@@ -8,12 +8,12 @@ import os, base64, datetime, hashlib, hmac
 urlbase = "https://utadtube.s3.amazonaws.com/htmls/"
 
 # Variables de sql
-rds_host = "52.23.154.30"
+rds_host = "macascript.com"
 
 username = "user"
 password = "password"
 
-dbname = "macatubedb"
+dbname = "utadtubedb"
 
 # Variables de S3
 access_key = 'ASIAXBQ2N3L4U3K3IHLA'
@@ -566,15 +566,18 @@ def votar(usuarioId,videoId,valor):
     body = {}
     try:
         with conn.cursor() as cur:
-            cur.execute("select 1 from Voto where usuarioId="+str(usuarioId)+" and videoId="+str(videoId))
+            cur.execute("select id from Voto where usuarioId="+str(usuarioId)+" and videoId="+str(videoId))
             conn.commit()
-            if (cur.fetchone() is None):
+            row = cur.fetchone()
+            print(row is None)
+            if row is None:
+                print("no hay voto")
                 cur.execute("insert into Voto(usuarioId,videoId,valor) values("+str(usuarioId)+","+str(videoId)+","+str(valor)+")")
                 conn.commit()
                 cur.execute("select id from Voto order by id desc limit 1")
                 conn.commit()
                 row = cur.fetchone()
-                if (row is not None):
+                if row is not None:
                     body["id"] = row[0]
     except pymysql.MySQLError as e:
         print(e)
@@ -665,14 +668,14 @@ def lambda_handler(event , context):
         videoId = event["queryStringParameters"]["videoId"]
         contenido = event["queryStringParameters"]["contenido"]
         comentarioPadreId = -1#event["queryStringParameters"]["comentarioPadreId"]
-        return comentar(usuarioId,videoId,contenido,comentarioPadreId)
+        return comentar(usuarioId,videoId,contenido,-1)
     if op == "votar":
         usuarioId = event["queryStringParameters"]["usuarioId"]
         videoId = event["queryStringParameters"]["videoId"]
         valor = event["queryStringParameters"]["valor"]
         votar(usuarioId,videoId,valor)
     return {
-        'statusCode': 200,
+        'statusCode': 500,
         'headers': { 'Access-Control-Allow-Origin' : '*' },
         'body' : json.dumps({ "redirectPage": urlbase+"error.html" })
     }
