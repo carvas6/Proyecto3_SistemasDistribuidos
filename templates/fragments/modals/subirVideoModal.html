@@ -48,15 +48,15 @@
 
     
     var videoArchive = document.getElementById("videoArchive").value;
-    videoArchive.lastModifiedDate = Date.now();
-    videoArchive.name = videoArchive.lastModifiedDate + videoArchive.name;
-    document.getElementById("key").value = "users/" + nombreUsuario + "/" + videoArchive.name;
+    //videoArchive.lastModifiedDate = Date.now();
+    videoArchive = Date.now() + videoArchive;
+    document.getElementById("key").value = "users/" + nombreUsuario + "/" + videoArchive;
     
     var idUsuario = document.getElementById("idUsuario").value;
     var nombreUsuario = document.getElementById("nombreUsuario").value;
     var descriptionVideo = document.getElementById("descriptionVideo").value;
 
-    var rutaAWS = "https://utad-tube.s3.amazonaws.com/users/" + nombreUsuario + "/" + videoArchive.name;
+    var rutaAWS = "https://utad-tube.s3.amazonaws.com/users/" + nombreUsuario + "/" + videoArchive;
     
     document.getElementById("success_action_redirect").value += "?loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&rutaAWSvideo=" + rutaAWS;
     
