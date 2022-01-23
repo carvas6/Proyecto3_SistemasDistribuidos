@@ -37,6 +37,7 @@
             function setKeyFilename() {
 
               const nombreUsuario = urlParams.get('nombreUsuario');
+              const idUsuario = urlParams.get('idUsuario');
 
               var idVideo = document.getElementById("idVideo").value;
 
@@ -58,7 +59,7 @@
 
               var encoded = encodeURI(rutaAWS);
               
-              document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + encoded;
+              document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + encoded + "&loggedUsername=" + nombreUsuario + "&loggedUserId=" + idUsuario;
 
               $('#formUploadImage').submit();
 
