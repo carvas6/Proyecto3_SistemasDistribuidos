@@ -48,10 +48,9 @@
 
     
     var videoArchive = document.getElementById("videoArchive").files[0].name;
-    //videoArchive.lastModifiedDate = Date.now();
-    alert(videoArchive);
+ 
     videoArchive = Date.now() + videoArchive;
-    alert(videoArchive);
+
     document.getElementById("key").value = "users/" + nombreUsuario + "/" + videoArchive;
     
     var idUsuario = document.getElementById("idUsuario").value;
@@ -59,9 +58,11 @@
     var descriptionVideo = document.getElementById("descriptionVideo").value;
 
     var rutaAWS = "https://utad-tube.s3.amazonaws.com/users/" + nombreUsuario + "/" + videoArchive;
+
+    var encoded = encodeURI(rutaAWS);
     
-    document.getElementById("success_action_redirect").value += "?loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&rutaAWSvideo=" + rutaAWS;
-    
+    document.getElementById("success_action_redirect").value += "?loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&rutaAWSvideo=" + encoded;
+
     $('#formUploadVideo').submit();
   }
   
