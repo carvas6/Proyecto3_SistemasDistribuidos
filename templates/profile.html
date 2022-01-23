@@ -155,9 +155,14 @@
 
                                 let boxColumn = document.createElement('div');
                                 boxColumn.classList.add('column', 'is-narrow', 'has-text-centered');
+
+                                let imageContainer = document.createElement('div');
+                                imageContainer.classList.add('has-text-centered');
+                                imageContainer.style="height: 24vh;overflow:hidden;";
                                 
                                 let image = document.createElement('img');
                                 image.classList.add('image', 'img-responsive');
+                                image.style="display:block;margin:auto;margin-top: auto;";
                                 if(json.videos[i].imagen==null){
                                     image.src = "../static/images/videoImageDeafult.png";
                                 }else{
@@ -192,7 +197,8 @@
                                 bottom.appendChild(videoUsername);
                                 bottom.appendChild(videoDate);
 
-                                boxColumn.appendChild(image);
+                                imageContainer.appendChild(image);
+                                boxColumn.appendChild(imageContainer);
                                 boxColumn.appendChild(bottom);
 
                                 linkBox.appendChild(boxColumn);
