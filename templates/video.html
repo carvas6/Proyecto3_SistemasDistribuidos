@@ -269,8 +269,8 @@
 
                             tituloBold.innerText = json.video.comentarios[i].nombreUsuario;
                             contenido.innerText = json.video.comentarios[i].contenido;
-                            tituloLink.classList.add('Link-large');
                             tituloLink.href="profile.html?idUsuario=" + json.video.comentarios[i].usuarioId;
+                            tituloLink.classList.add('Link-large');
 
                             titulo.appendChild(tituloBold);
                             tituloLink.appendChild(titulo);
