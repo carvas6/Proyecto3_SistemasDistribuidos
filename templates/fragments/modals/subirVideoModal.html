@@ -23,6 +23,7 @@
   }
 
   function tiene_letras(texto){
+    letras = "#@";
     texto = texto.toLowerCase();
     for(i=0; i<texto.length; i++){
         if (letras.indexOf(texto.charAt(i),0)!=-1){
@@ -33,7 +34,6 @@
   }
   
   function setKeyFilename() {
-    var caracteresEspeciales="#@";
     var nombreVideo = document.getElementById("videoName").value;
     var tagsVideo = document.getElementById("tagsVideo").value;
 
@@ -47,8 +47,8 @@
     
     var videoArchive = document.getElementById("videoArchive").value;
     videoArchive.lastModifiedDate = Date.now();
-    videoArchive.name = videoArchive.lastModifiedDate + document.getElementById("key").value;
-    document.getElementById("key").value ="users/"+nombreUsuario+"/"+ videoArchive.name;
+    videoArchive.name = videoArchive.lastModifiedDate + videoArchive.name;
+    document.getElementById("key").value = nombreUsuario + "/" + videoArchive.name;
     
     var idUsuario = document.getElementById("idUsuario").value;
     var nombreUsuario = document.getElementById("nombreUsuario").value;
@@ -56,7 +56,9 @@
 
     var rutaAWS = "https://utad-tube.s3.amazonaws.com/users/" + nombreUsuario + "/" + videoArchive.name;
     
-    document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&rutaAWSvideo=" + rutaAWS;
+    document.getElementById("success_action_redirect").value += "?loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&rutaAWSvideo=" + rutaAW
+    
+    $('#formUploadVideo').submit();
   }
   
   </script>
@@ -69,7 +71,7 @@
           <div class="container">
               <div class="columns is-centered">
                   <div class="column">
-                    <form action="https://s3.amazonaws.com/utad-tube" onsubmit="setKeyFilename()" id="formUploadVideo" method="post" enctype="multipart/form-data">
+                    <form action="https://s3.amazonaws.com/utad-tube/users/" id="formUploadVideo" method="post" enctype="multipart/form-data">
                       <input type="hidden" name="acl" value="public-read" />
                       <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
                       <input type="hidden"  id="X-Amz-Credential" name="X-Amz-Credential" value="" />
@@ -124,10 +126,9 @@
                                       </div>
                                   </div>
                               </div>
-
-                          <button class="button is-link" type="submit" id="uploadVideoButton">Subir Video
-                          </button>
                         </form>
+                        <button class="button is-link" type="button" onclick="setKeyFilename()" id="uploadVideoButton">Subir Video
+                        </button>
                   </div>
               </div>
           </div>
