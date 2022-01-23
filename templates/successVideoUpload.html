@@ -44,7 +44,7 @@
               imageArchive.lastModifiedDate = new Date();
               imageArchive.name = imageArchive.lastModifiedDate + document.getElementById("key").value;
 
-              var rutaAWS = "https://utadtube.s3.amazonaws.com/users/" + nombreUsuario + "/" + imageArchive.name;
+              var rutaAWS = "https://utad-tube.s3.amazonaws.com/users/" + nombreUsuario + "/" + imageArchive.name;
               
               document.getElementById("success_action_redirect").value += "?idVideo=" + idVideo + "&rutaAwsImagen=" + rutaAWS;
             }
@@ -59,7 +59,7 @@
 
         <p class="text-center">VIDEO SUBIDO A S3 CORRECTAMENTE</p>
 
-        <form action="https://utadtube.s3.amazonaws.com/users/" onsubmit="setKeyFilename()" id="formUploadImage" method="post" enctype="multipart/form-data"></form>
+        <form action="https://utad-tube.s3.amazonaws.com/users/" onsubmit="setKeyFilename()" id="formUploadImage" method="post" enctype="multipart/form-data"></form>
             <div class="field">
                 <label class="label" for="imageArchive">Preview Image</label>
                 <div class="control">
@@ -78,7 +78,7 @@
             <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
             <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
             <input type="hidden" name="acl" value="public-read" />
-            <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="http://pruebauploadutad.s3-website-us-east-1.amazonaws.com/successImageUpload.html" />
+            <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="https://utad-tube.s3-website-us-east-1.amazonaws.com/successImageUpload.html" />
             <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
             <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
 
@@ -135,7 +135,7 @@
                 getAWSKeys();
 
                 var loggedUser = document.getElementById('nombreUsuario').value;
-                document.getElementById('formUploadImage').action = "https://utadtube.s3.amazonaws.com/users/" + loggedUser + "/";
+                document.getElementById('formUploadImage').action = "https://utad-tube.s3.amazonaws.com/users/" + loggedUser + "/";
             })
             .fail(function () {
                 swal('','Error guardando el video en la BBDD', 'error');

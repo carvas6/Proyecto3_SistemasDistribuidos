@@ -1,3 +1,4 @@
+<script type="text/javascript" src="date.js"></script>
 <script>
 
   function getAWSKeys() {
@@ -41,19 +42,19 @@
     }else if(tiene_letras(tagsVideo) == 1){
       tagsVideo.setCustomValidity("Tags de video no puede contener '#' ni '@'");
     }    
+    var nombreUsuario = document.getElementById('nombreUsuario').value;
 
-
-    document.getElementById("key").value = document.getElementById("videoArchive").value.substring(document.getElementById("videoArchive").value.lastIndexOf('\\')+1);
     
     var videoArchive = document.getElementById("videoArchive").value;
-    videoArchive.lastModifiedDate = new Date();
+    videoArchive.lastModifiedDate = Date.now();
     videoArchive.name = videoArchive.lastModifiedDate + document.getElementById("key").value;
+    document.getElementById("key").value ="users/"+nombreUsuario+"/"+ videoArchive.name;
     
     var idUsuario = document.getElementById("idUsuario").value;
     var nombreUsuario = document.getElementById("nombreUsuario").value;
     var descriptionVideo = document.getElementById("descriptionVideo").value;
 
-    var rutaAWS = "https://utadtube.s3.amazonaws.com/users/" + nombreUsuario + "/" + videoArchive.name;
+    var rutaAWS = "https://utad-tube.s3.amazonaws.com/users/" + nombreUsuario + "/" + videoArchive.name;
     
     document.getElementById("success_action_redirect").value += "?idUsuario=" + idUsuario + "&nombreUsuario=" + nombreUsuario + "&nombreVideo=" + nombreVideo + "&descriptionVideo=" + descriptionVideo + "&tagsVideo=" + tagsVideo + "&loggedUserId=" + idUsuario + "&loggedUsername=" + nombreUsuario + "&rutaAWSvideo=" + rutaAWS;
   }
@@ -68,13 +69,23 @@
           <div class="container">
               <div class="columns is-centered">
                   <div class="column">
-                    <form action="https://utadtube.s3.amazonaws.com/users/" onsubmit="setKeyFilename()" id="formUploadVideo" method="post" enctype="multipart/form-data">
+                    <form action="https://s3.amazonaws.com/utad-tube" onsubmit="setKeyFilename()" id="formUploadVideo" method="post" enctype="multipart/form-data">
+                      <input type="hidden" name="acl" value="public-read" />
+                      <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
+                      <input type="hidden"  id="X-Amz-Credential" name="X-Amz-Credential" value="" />
+                      <input type="hidden"  id="X-Amz-Date" name="X-Amz-Date" value="" />
+                      <input type="hidden"  id="Policy" name="Policy" value="" />
+                      <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
+                      <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="https://utad-tube.s3.amazonaws.com/htmls/templates/successVideoUpload.html" />
+                      <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
+                      <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
                               <div class="box has-background-light">
                                   <div class="field">
                                       <label class="label" for="videoArchive">Video</label>
                                       <div class="control">
                                           <input id="videoArchive"
                                               type="file"
+                                              name="file"
                                               class="input"
                                               placeholder="Sube aqui tu archivo de video" required/>
                                               <span id="errorTypeVideoUpload" style="color:red;"><!--Mensaje de error tipo de archivo no válido--></span>
@@ -113,15 +124,6 @@
                                       </div>
                                   </div>
                               </div>
-                              <input type="hidden"  id="X-Amz-Credential" name="X-Amz-Credential" value="" />
-                              <input type="hidden"  id="X-Amz-Date" name="X-Amz-Date" value="" />
-                              <input type="hidden"  id="Policy" name="Policy" value="" />
-                              <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
-                              <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
-                              <input type="hidden" name="acl" value="public-read" />
-                              <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="https://utadtube.s3.amazonaws.com/htmls/successVideoUpload.html" />
-                              <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
-                              <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
 
                           <button class="button is-link" type="submit" id="uploadVideoButton">Subir Video
                           </button>
@@ -138,7 +140,7 @@
     $(document).ready(function () {
       getAWSKeys();
 
-      var loggedUser = document.getElementById('nombreUsuario').value;
-      document.getElementById('formUploadVideo').action = "https://utadtube.s3.amazonaws.com/users/" + loggedUser + "/";
+      //var loggedUser = document.getElementById('nombreUsuario').value;
+      //document.getElementById('formUploadVideo').action = "https://utad-tube.s3.amazonaws.com/users/" + loggedUser + "/";
     });
   </script>
