@@ -47,9 +47,11 @@
     var nombreUsuario = document.getElementById('nombreUsuario').value;
 
     
-    var videoArchive = document.getElementById("videoArchive").value;
+    var videoArchive = document.getElementById("videoArchive").files[0].name;
     //videoArchive.lastModifiedDate = Date.now();
+    alert(videoArchive);
     videoArchive = Date.now() + videoArchive;
+    alert(videoArchive);
     document.getElementById("key").value = "users/" + nombreUsuario + "/" + videoArchive;
     
     var idUsuario = document.getElementById("idUsuario").value;
