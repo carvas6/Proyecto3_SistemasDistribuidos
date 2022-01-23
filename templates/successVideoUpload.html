@@ -35,6 +35,8 @@
             }
             
             function setKeyFilename() {
+              
+              const urlParams = new URLSearchParams(window.location.search);
 
               const nombreUsuario = urlParams.get('nombreUsuario');
               const idUsuario = urlParams.get('idUsuario');
