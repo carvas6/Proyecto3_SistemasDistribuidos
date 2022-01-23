@@ -5,12 +5,112 @@
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
         <script defer src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+        <link rel="icon" href="../static/images/utadtube.png">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <title>UtadTube Video Watch</title>
     </head>
     <body>
+        <script>
+
+            function likeVideo(valor){
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const idVideo = urlParams.get('idVideo');
+                var loggedUsername = urlParams.get('loggedUsername');
+                var loggedUserId = urlParams.get('loggedUserId');
+
+                var vres = "";
+                var json;
+                var asd = $.get(
+                    //"http://18.133.181.212/calculadora.php",
+                    "https://www.macascript.com/index.php",
+
+                    {op: "votar", usuarioId: loggedUserId, videoId: idVideo, valor: valor},
+                    function (data) {
+                    function jsonEscape(str) {
+                        return str
+                        .replace(/\n/g, "\\\\n")
+                        .replace(/\r/g, "\\\\r")
+                        .replace(/\t/g, "\\\\t");
+                    }
+
+                    //descomentar esta línea si se usa PHP :
+                    json=JSON.parse(data);
+                    json=JSON.parse(json);
+                    //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                    //json = data;
+                    alert("page content: " + JSON.stringify(json));
+                    //document.getElementById("res").innerHTML =
+                    //   "Resultado recibido:" + json.res;
+                    //window.location.replace(json.redirect);
+                    }
+                )
+                    .done(function () {
+                        if(json.id == null){
+                            swal('Error votando video','Ya ha votado con aterioridad este video, solo se permite un voto por usuario y video', 'error');
+                        }
+                        else{
+                            swal('','Voto realizado correctamente', 'success');
+                            location.reload();
+                        }
+                    })
+                    .fail(function () {
+                        swal('','Error votando video', 'error');
+                    });
+
+                asd.always(function () {
+                });
+            }
+
+            function Comentar(){
+
+                        var contenido = document.getElementById('contenidoComentario').value;
+
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const idVideo = urlParams.get('idVideo');
+                        var loggedUsername = urlParams.get('loggedUsername');
+                        var loggedUserId = urlParams.get('loggedUserId');
+
+                        var vres = "";
+                        var json;
+                        var asd = $.get(
+                            //"http://18.133.181.212/calculadora.php",
+                            "https://www.macascript.com/index.php",
+
+                            {op: "comentar", usuarioId: loggedUserId, videoId: idVideo, contenido: contenido},
+                            function (data) {
+                            function jsonEscape(str) {
+                                return str
+                                .replace(/\n/g, "\\\\n")
+                                .replace(/\r/g, "\\\\r")
+                                .replace(/\t/g, "\\\\t");
+                            }
+
+                            //descomentar esta línea si se usa PHP :
+                            json=JSON.parse(data);
+                            json=JSON.parse(json);
+                            //descomentar esta línea si se usa lambda-apigateway : var json=data;
+                            alert("page content: " + JSON.stringify(json));
+                            //document.getElementById("res").innerHTML =
+                            //    "Resultado recibido:" + json.res;
+                            //window.location.replace(json.redirect);
+                            }
+                        )
+                            .done(function () {
+                                swal('','Comentario realizado correctamente', 'success');
+                                location.reload();
+                            })
+                            .fail(function () {
+                                swal('','Error comentando video', 'error');
+                            });
+
+                        asd.always(function () {
+                        });
+            }
+        </script>
+
         <nav class="navbar" role="navigation" aria-label="main navigation">
         </nav>
 
@@ -56,6 +156,7 @@
                         <p>este es un comentario sobre el video</p>
                     </div>-->
                 </div>
+                <hr>
                 <div id="comentarButton">
                     <textarea id="contenidoComentario"></textarea>
                     <a onclick="Comentar();" type="button" class="button is-primary">Comentar</a>
@@ -82,11 +183,11 @@
               $('.modalForgotPassword').load('fragments/modals/forgotPasswordModal.html');
               $('.modalChangePassword').load('fragments/modals/changePasswordModal.html');
 
-              var loggedUsername = document.getElementById('nombreUsuario');
-              var loggedUserId = document.getElementById('idUsuario');
+                var loggedUsername = document.getElementById('nombreUsuario').value;
+                var loggedUserId = document.getElementById('idUsuario').value;
 
-              const urlParams = new URLSearchParams(window.location.search);
-              const idVideo = urlParams.get('idVideo');
+                const urlParams = new URLSearchParams(window.location.search);
+                const idVideo = urlParams.get('idVideo');
 
                 if(loggedUserId==null){
                     document.getElementById("comentarButton").style="display:none;";
@@ -95,91 +196,6 @@
                 else{
                     document.getElementById("likeDislikeButtons").style="display:block;";
                     document.getElementById("comentarButton").style="display:block;";
-
-                    function likeVideo(valor){
-
-                        var vres = "";
-                        var json;
-                        var asd = $.get(
-                            //"http://18.133.181.212/calculadora.php",
-                            "https://www.macascript.com/index.php",
-
-                            {op: "votar", usuarioId: loggedUserId, videoId: idVideo, valor: valor},
-                            function (data) {
-                            function jsonEscape(str) {
-                                return str
-                                .replace(/\n/g, "\\\\n")
-                                .replace(/\r/g, "\\\\r")
-                                .replace(/\t/g, "\\\\t");
-                            }
-
-                            //descomentar esta línea si se usa PHP :
-                            json=JSON.parse(data);
-                            json=JSON.parse(json);
-                            //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                            //json = data;
-                            alert("page content: " + JSON.stringify(json));
-                            //document.getElementById("res").innerHTML =
-                            //   "Resultado recibido:" + json.res;
-                            //window.location.replace(json.redirect);
-                            }
-                        )
-                            .done(function (json) {
-                                if(json.id == null){
-                                    swal('Error votando video','Ya ha votado con aterioridad este video, solo se permite un voto por usuario y video', 'error');
-                                }
-                                else{
-                                    swal('','Voto realizado correctamente', 'error');
-                                    location.reload();
-                                }
-                            })
-                            .fail(function () {
-                                swal('','Error votando video', 'error');
-                            });
-
-                        asd.always(function () {
-                        });
-                    }
-
-                    function Comentar(){
-                        var contenido = document.getElementById('contenidoComentario');
-
-                        var vres = "";
-                        var json;
-                        var asd = $.get(
-                            //"http://18.133.181.212/calculadora.php",
-                            "https://www.macascript.com/index.php",
-
-                            {op: "comentar", usuarioId: loggedUserId, videoId: idVideo, contenido: contenido},
-                            function (data) {
-                            function jsonEscape(str) {
-                                return str
-                                .replace(/\n/g, "\\\\n")
-                                .replace(/\r/g, "\\\\r")
-                                .replace(/\t/g, "\\\\t");
-                            }
-
-                            //descomentar esta línea si se usa PHP :
-                            json=JSON.parse(data);
-                            json=JSON.parse(json);
-                            //descomentar esta línea si se usa lambda-apigateway : var json=data;
-                            alert("page content: " + JSON.stringify(json));
-                            //document.getElementById("res").innerHTML =
-                            //    "Resultado recibido:" + json.res;
-                            //window.location.replace(json.redirect);
-                            }
-                        )
-                            .done(function () {
-                                swal('','Comentario realizado correctamente', 'error');
-                                location.reload();
-                            })
-                            .fail(function () {
-                                swal('','Error comentando video', 'error');
-                            });
-
-                        asd.always(function () {
-                        });
-                    }
                 }
 
               var vres = "";
@@ -232,7 +248,8 @@
 
                         var usuarioVideoLink = document.getElementById('usuarioVideoLink');
 
-                        usuarioVideoLink.href = "/profile.html?idUsuario=" + json.video.usuarioId;
+                        usuarioVideoLink.href = "profile.html?idUsuario=" + json.video.usuarioId;
+                        usuarioVideoLink.classList.add('Link-large');
 
                         var descripcionVideo = document.getElementById('descripcionVideo');
                         descripcionVideo.innerText = json.video.descripcion;
@@ -252,8 +269,8 @@
 
                             tituloBold.innerText = json.video.comentarios[i].nombreUsuario;
                             contenido.innerText = json.video.comentarios[i].contenido;
+                            tituloLink.href="profile.html?idUsuario=" + json.video.comentarios[i].usuarioId;
                             tituloLink.classList.add('Link-large');
-                            tituloLink.href="/profile.html?idUsuario=" + json.video.comentarios[i].idUsuario;
 
                             titulo.appendChild(tituloBold);
                             tituloLink.appendChild(titulo);

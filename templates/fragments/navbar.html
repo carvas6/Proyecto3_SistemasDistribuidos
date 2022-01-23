@@ -82,9 +82,7 @@
                                 </a>
                                 <hr class="navbar-divider">
                                 <div class="navbar-item">
-                                    <a class="button" href="/logout" onclick="$('#form').submit();"> Logout</a>
-                                    <form style="visibility: hidden" id="form" method="post"
-                                        action="#"></form>
+                                    <a class="button" href="Inicio.html"> Logout</a>
                                 </div>
                             </div>
                         </div>
@@ -98,11 +96,13 @@
 
                     const idUsuario = urlParams.get('loggedUserId');
                     document.getElementById("idUsuario").value = idUsuario;
+                    //alert("navbar-"+idUsuario);
 
                     const nombreUsuario = urlParams.get('loggedUsername');
                     document.getElementById("nombreUsuario").value = nombreUsuario;
+                    //alert("navbar-"+nombreUsuario);
 
-                    if(idUsuario==null && nombreUsuario==null){
+                    if(idUsuario==null && nombreUsuario==null  || idUsuario=="" && nombreUsuario==""){
                         document.getElementById('entrar').style = "display:block;";
                         document.getElementById('desplegable').style = "display:none;";
                     }
@@ -112,10 +112,10 @@
                         document.getElementById('usernameDesplegable').innerText = nombreUsuario;
                         var links = document.getElementsByClassName('Link');
                         for(var i=0;i<links.length;++i){
-                            links[i].href += "?loggedUserId=" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;
+                            links[i].href += "?idUsuario=" + idUsuario + "&loggedUserId=" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;
                         } 
                         var linksLarge = document.getElementsByClassName('Link-large');
-                        for(var i=0;i<links.length;++i){
+                        for(var i=0;i<linksLarge.length;++i){
                             linksLarge[i].href += "&loggedUserId=" + document.getElementById('idUsuario').value + "&loggedUsername=" + document.getElementById('nombreUsuario').value;
                         }                   
                     }
@@ -126,7 +126,7 @@
                         var loggedUsername = document.getElementById('nombreUsuario').value;
                         var loggedUserId = document.getElementById('idUsuario').value;
 
-                        window.location.replace("/inicio.html?loggedUsername" + loggedUsername + "&loggedUserId=" + loggedUserId + "&busqueda=" + busqueda);
+                        window.location.replace("Inicio.html?loggedUsername" + nombreUsuario + "&loggedUserId=" + idUsuario + "&busqueda=" + busqueda);
                     });
                 });
             </script>
