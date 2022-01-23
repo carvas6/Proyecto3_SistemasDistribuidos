@@ -35,9 +35,6 @@
             }
             
             function setKeyFilename() {
-    
-              //document.getElementById("key").value = document.getElementById("imageArchive").value.substring(document.getElementById("imageArchive").value.lastIndexOf('\\')+1);	
-              const urlParams = new URLSearchParams(window.location.search);
 
               const nombreUsuario = urlParams.get('nombreUsuario');
 
@@ -78,13 +75,13 @@
 
         <form action="https://s3.amazonaws.com/utad-tube/" id="formUploadImage" method="post" enctype="multipart/form-data"></form>
             <div class="field">
-                <label class="label" for="imageArchive">Preview Image</label>
+                <label class="label" for="imageArchive">Preview Image (Sube aqui tu archivo de imagen preliminar al video, si no subes una imagen se mostrara una por defecto)</label>
                 <div class="control">
                     <input id="imageArchive"
                         type="file"
                         name="file"
                         class="input"
-                        value="Sube aqui tu archivo de imagen preliminar al video, si no subes una imagen se mostrara una por defecto" required/>
+                        placeholder="Sube aqui tu archivo de imagen" required/>
                         <span id="errorTypeImageUpload" style="color:red;"><!--Mensaje de error tipo de archivo no válido--></span>
                 </div>
             </div>
