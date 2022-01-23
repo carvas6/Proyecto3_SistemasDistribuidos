@@ -39,8 +39,10 @@
 
     if(tiene_letras(nombreVideo) == 1){
       nombreVideo.setCustomValidity("Nombre de video no puede contener '#' ni '@'");
+      return;
     }else if(tiene_letras(tagsVideo) == 1){
       tagsVideo.setCustomValidity("Tags de video no puede contener '#' ni '@'");
+      return;
     }    
     var nombreUsuario = document.getElementById('nombreUsuario').value;
 
