@@ -67,14 +67,15 @@
 
         <p class="text-center">VIDEO SUBIDO A S3 CORRECTAMENTE</p>
 
-        <form action="https://utad-tube.s3.amazonaws.com/utad-tube/" id="formUploadImage" method="post" enctype="multipart/form-data"></form>
+        <form action="https://s3.amazonaws.com/utad-tube/" id="formUploadImage" method="post" enctype="multipart/form-data"></form>
             <div class="field">
                 <label class="label" for="imageArchive">Preview Image</label>
                 <div class="control">
                     <input id="imageArchive"
                         type="file"
+                        name="file"
                         class="input"
-                        placeholder="Sube aqui tu archivo de imagen preliminar al video, si no subes una imagen se mostrara una por defecto" required/>
+                        value="Sube aqui tu archivo de imagen preliminar al video, si no subes una imagen se mostrara una por defecto" required/>
                         <span id="errorTypeImageUpload" style="color:red;"><!--Mensaje de error tipo de archivo no válido--></span>
                 </div>
             </div>
@@ -86,12 +87,12 @@
             <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
             <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
             <input type="hidden" name="acl" value="public-read" />
-            <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="https://utad-tube.s3-website-us-east-1.amazonaws.com/successImageUpload.html" />
+            <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="https://utad-tube.s3-website-us-east-1.amazonaws.com/htmls/templates/successImageUpload.html" />
             <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
             <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
 
         </form>
-        <button class="button is-link" type="submit" onclick="setKeyFilename()" id="uploadImageButton">Subir Imagen previa al video
+        <button class="button is-link" type="button" onclick="setKeyFilename()" id="uploadImageButton">Subir Imagen previa al video
         </button>
 
     <script>
@@ -137,8 +138,7 @@
                 swal('','Video guardado correctamente en la BBDD', 'success');
                 getAWSKeys();
 
-                var loggedUser = document.getElementById('nombreUsuario').value;
-                document.getElementById('formUploadImage').action = "https://utad-tube.s3.amazonaws.com/users/" + loggedUser + "/";
+                document.getElementById('idVideo').value = json.id;
             })
             .fail(function () {
                 swal('','Error guardando el video en la BBDD', 'error');
