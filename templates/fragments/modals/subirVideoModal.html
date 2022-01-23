@@ -39,7 +39,7 @@
 
     var videoArchive = document.getElementById("videoArchive").files[0].name;
 
-    var allowedExtensions = /(.mp4|.mpeg|.avi|.mkv|.flv|.mov|.wmv|.divx)$/i;
+    var allowedExtensions = /(.mp4|.mpeg|.avi|.mkv|.flv|.mov|.wmv|.divx|.webm|.ogv|.ogg|.oga|.ogx|.ogm|.spx|.opus|.m4v)$/i;
 
     if(tiene_letras(nombreVideo) == 1){
       document.getElementById("errorNameVideoUpload").innerText = "Nombre de video no puede contener '#' ni '@'";
@@ -52,7 +52,7 @@
       document.getElementById("errorTypeVideoUpload").innerText = "";
       return;
     }else if(!allowedExtensions.exec(videoArchive)){
-      document.getElementById("errorTypeVideoUpload").innerText = "Por favor sube un archivo de video, las extensiones válidas son: .mp4/.mpeg/.avi/.mkv/.flv/.mov/.wmv/.divx sólo";
+      document.getElementById("errorTypeVideoUpload").innerText = "Por favor sube un archivo de video, las extensiones válidas son: .mp4/.mpeg/.avi/.mkv/.flv/.mov/.wmv/.divx/.webm/.ogv/.ogg/.oga/.ogx/.ogm/.spx/.opus/.m4v sólo";
       document.getElementById("errorTagsNameVideoUpload").innerText = "";
       document.getElementById("errorNameVideoUpload").innerText = "";
       document.getElementById("videoArchive").value = '';
