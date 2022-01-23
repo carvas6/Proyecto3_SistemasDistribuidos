@@ -85,7 +85,9 @@
 
         <p class="text-center">VIDEO SUBIDO A S3 CORRECTAMENTE</p>
 
-        <form action="https://s3.amazonaws.com/utad-tube/" id="formUploadImage" method="post" enctype="multipart/form-data"></form>
+        <form action="https://s3.amazonaws.com/utad-tube/" id="formUploadImage" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="acl" value="public-read" />
+            <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
             <div class="field">
                 <label class="label" for="imageArchive">Preview Image (Sube aqui tu archivo de imagen preliminar al video, si no subes una imagen se mostrara una por defecto)</label>
                 <div class="control">
@@ -103,8 +105,6 @@
             <input type="hidden"  id="X-Amz-Date" name="X-Amz-Date" value="" />
             <input type="hidden"  id="Policy" name="Policy" value="" />
             <input type="hidden"   id="X-Amz-Signature" name="X-Amz-Signature" value="" />
-            <input type="hidden" id="key" name="key" value="fichero.sln" /><br />
-            <input type="hidden" name="acl" value="public-read" />
             <input type="hidden" id="success_action_redirect" name="success_action_redirect" value="https://utad-tube.s3.amazonaws.com/htmls/templates/successImageUpload.html" />
             <input type="hidden"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
             <input type="hidden" id="X-Amz-Security-Token" name="X-Amz-Security-Token" value=""/>
